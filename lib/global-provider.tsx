@@ -1,6 +1,6 @@
 import React, { createContext, useContext, ReactNode } from "react";
 
-import { getCurrentUser } from "./appwrite";
+import { getCurrentUserAppwrite } from "./appwrite";
 import { useAppwrite } from "./useAppwrite";
 import { Redirect } from "expo-router";
 
@@ -30,7 +30,7 @@ export const GlobalProvider = ({ children }: GlobalProviderProps) => {
         loading,
         refetch,
     } = useAppwrite({
-        fn: getCurrentUser,
+        fn: getCurrentUserAppwrite,
     });
 
     const isLogged = !!user;

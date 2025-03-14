@@ -39,8 +39,10 @@ import lock from '@/assets/icons/lock.png'
 import email from '@/assets/icons/email.png'
 import birthdayCake from '@/assets/icons/birthday-cake.png'
 import sex from '@/assets/icons/sex.png'
+import arrowDown from "@/assets/icons/arrow-down.png"
 export default {
   google,
+  arrowDown,
   birthdayCake,
   sex,
   leftarrow,

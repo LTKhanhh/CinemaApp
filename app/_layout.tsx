@@ -4,7 +4,9 @@ import { useFonts } from "expo-font"
 import { useEffect } from "react";
 import { SplashScreen } from "expo-router";
 import GlobalProvider from "@/lib/global-provider";
-
+import { Provider } from "react-redux";
+import store from "@/redux/store";
+import { useDispatch } from "react-redux";
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     "Rubik-Bold": require("../assets/fonts/Rubik-Bold.ttf"),
@@ -19,13 +21,15 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded]);
-
   if (!fontsLoaded) {
     return null;
   }
+
   return (
-    <GlobalProvider>
+    <Provider store={store}>
+      {/* // <GlobalProvider> */}
       <Stack screenOptions={{ headerShown: false }} />
-    </GlobalProvider>
+      {/* </GlobalProvider> */}
+    </Provider>
   );
 }

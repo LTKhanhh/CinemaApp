@@ -11,7 +11,7 @@ import {
 import * as Linking from "expo-linking";
 import { openAuthSessionAsync } from "expo-web-browser";
 export const config = {
-    platform: 'com.nemui.cinemaapp',
+    platform: 'com.ltk.learn',
     endpoint: process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT,
     projectId: process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID
 }
@@ -25,7 +25,7 @@ client.setEndpoint(config.endpoint!)
 export const avatar = new Avatars(client)
 export const account = new Account(client)
 
-export async function login() {
+export async function loginAppwrite() {
     try {
         const redirectUri = Linking.createURL("/");
 
@@ -52,12 +52,11 @@ export async function login() {
 
         return true;
     } catch (error) {
-        console.error(error);
         return false;
     }
 }
 
-export async function logout() {
+export async function logoutAppwrite() {
     try {
         const result = await account.deleteSession("current");
         return result;
@@ -67,7 +66,7 @@ export async function logout() {
     }
 }
 
-export async function getCurrentUser() {
+export async function getCurrentUserAppwrite() {
     try {
         const result = await account.get();
         if (result.$id) {
