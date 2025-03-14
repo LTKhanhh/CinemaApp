@@ -40,9 +40,13 @@ import email from '@/assets/icons/email.png'
 import birthdayCake from '@/assets/icons/birthday-cake.png'
 import sex from '@/assets/icons/sex.png'
 import arrowDown from "@/assets/icons/arrow-down.png"
+import plus from "@/assets/icons/plus.png"
+import calendar_clock from "@/assets/icons/calendar-clock.png"
 export default {
   google,
   arrowDown,
+  calendar_clock,
+  plus,
   birthdayCake,
   sex,
   leftarrow,
