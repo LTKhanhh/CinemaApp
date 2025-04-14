@@ -42,10 +42,23 @@ import sex from '@/assets/icons/sex.png'
 import arrowDown from "@/assets/icons/arrow-down.png"
 import plus from "@/assets/icons/plus.png"
 import calendar_clock from "@/assets/icons/calendar-clock.png"
+import setting from "@/assets/icons/settings.png"
+import film from "@/assets/icons/film.png"
+import document from "@/assets/icons/document.png"
+import chair from "@/assets/icons/chair.png";
+import chair2 from "@/assets/icons/chair2.png";
+import chair3 from "@/assets/icons/chair3.png";
+
 export default {
+  chair,
+  chair2,
+  chair3,
+  document,
   google,
-  arrowDown,
+  film,
   calendar_clock,
+  arrowDown,
+  setting,
   plus,
   birthdayCake,
   sex,

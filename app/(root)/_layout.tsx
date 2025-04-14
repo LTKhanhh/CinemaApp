@@ -8,33 +8,30 @@ import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { AppDispatch } from "@/redux/actions/authActions";
 import { getCurrentUserAppwrite } from "@/redux/actions/authActions";
-// import { useGlobalContext } from "@/lib/global-provider";
+import { useGlobalContext } from "@/lib/global-provider";
 
 export default function AppLayout() {
-    // const { loading, isLogged } = useGlobalContext();
-    const { user, isLogged, loading } = useSelector(
-        (state: RootState) => state.auth
-    );
-    const dispatch = useDispatch<AppDispatch>()
+    const { loading, isLogged } = useGlobalContext();
+    // const { user, isLogged, loading } = useSelector(
+    //     (state: RootState) => state.auth
+    // );
+    // const dispatch = useDispatch<AppDispatch>()
 
 
-    useEffect(() => {
-        dispatch(getCurrentUserAppwrite())
-    }
-        , [dispatch])
-    console.log('user' + user)
-    console.log('isLog' + isLogged)
-    console.log('isload' + loading)
-
-    // if (loading) {
-    //     return (
-    //         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    //             <SafeAreaView className="h-full flex justify-center items-center">
-    //                 <ActivityIndicator className="text-primary-300" size="large" />
-    //             </SafeAreaView>
-    //         </TouchableWithoutFeedback>
-    //     );
+    // useEffect(() => {
+    //     dispatch(getCurrentUserAppwrite())
     // }
+    //     , [dispatch])
+
+    if (loading) {
+        return (
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <SafeAreaView className="h-full flex justify-center items-center">
+                    <ActivityIndicator className="text-primary-300" size="large" />
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+        );
+    }
 
     // if (!isLogged) {
     //     return <Redirect href="/login" />;

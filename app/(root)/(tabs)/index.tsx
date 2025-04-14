@@ -1,4 +1,4 @@
-import { Animated, FlatList, Image, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { Animated, FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@/components/Card";
 
@@ -8,7 +8,13 @@ import Filter from "@/components/Filter";
 import FeatureCard from "@/components/FeatureCard";
 import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
 import { useState, useRef } from "react";
+import { useGlobalContext } from "@/lib/global-provider";
+import { blue300 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
+import { data, dataBanner } from './datatest'
+
 export default function Index() {
+  const { loading, isLogged } = useGlobalContext();
+
   const [activeIndex, setActiveIndex] = useState(0)
   const { width } = useWindowDimensions()
   const scrollX = useRef(new Animated.Value(0)).current
@@ -29,7 +35,6 @@ export default function Index() {
   const handleOnViewableItemsChanged = useRef(({ viewableItems }: { viewableItems: any }) => {
 
     if (viewableItems && viewableItems.length > 0) {
-      console.log(viewableItems);
       setActiveIndex(viewableItems[0].index);
     }
   }).current
@@ -41,14 +46,35 @@ export default function Index() {
     < SafeAreaView className="h-full px-1 bg-[#ffffff]" >
       <View>
         <View className="px-4 pb-4 flex w-full border-b bg-[#ffffff] border-[#eeeeee] flex-row items-center justify-between">
-          <TouchableOpacity className=" p-2 mb-2 rounded-lg flex-row items-center border border-[#06599d] justify-between">
-            <Link href={"/login"} >
-              <Image source={icons.person} tintColor="#06599d" className="size-6 mr-2" />
-              <View>
-                <Text className="font-rubik-semibold text-primary-300">Đăng nhập</Text>
+          {
+            !isLogged ?
+              <TouchableOpacity className=" p-2 mb-2 rounded-lg flex-row items-center border border-[#06599d] justify-between">
+                <Link href={"/login"} >
+                  <Image source={icons.person} tintColor="#06599d" className="size-6 mr-2" />
+                  <View>
+                    <Text className="font-rubik-semibold text-primary-300">Đăng nhập</Text>
+                  </View>
+                </Link>
+              </TouchableOpacity> :
+              <View className="flex-row pt-3">
+                <Link href={'/(root)/(profile)/ProfilePage'} className="  mr-2">
+                  <Image className="border rounded-full size-11" source={icons.person} />
+                </Link>
+                <View className="justify-between">
+                  <Text className="text-[13px]">Chào, <Text className="font-semibold">Lê Trọng Khánh</Text></Text>
+
+                  <View className="flex-row">
+                    <View className="flex-row items-center">
+                      <Image source={icons.person} className="size-4" tintColor={"blue"} />
+                      <Text className="uppercase text-blue-950 text-[12px] font-semibold">Member</Text>
+                    </View>
+                  </View>
+                </View>
               </View>
-            </Link>
-          </TouchableOpacity>
+          }
+
+
+
           <Image source={icons.people} className="size-6" />
         </View>
         <Filter />
@@ -56,12 +82,12 @@ export default function Index() {
 
       <ScrollView className="bg-[#f7f7f7]">
         <FlatList
-          data={[1, 2, 3]}
+          data={dataBanner}
           renderItem={({ item }) => (
-            <FeatureCard id={activeIndex}
+            <FeatureCard id={item.id} image={item.bannerUrl}
             />
           )}
-          keyExtractor={(item) => item.toString()}
+          keyExtractor={(item) => item.id}
           bounces={false}
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -75,7 +101,7 @@ export default function Index() {
 
 
         <FlatList
-          data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]}
+          data={data}
           numColumns={3}
           columnWrapperStyle={{
             justifyContent: "flex-start",
@@ -87,7 +113,7 @@ export default function Index() {
           className="mt-2 pb-32 px-[5px]"
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <Card />
+            <Card id={item._id.$oid} title={item.title} posterUrl={item.posterUrl} ageRating={item.ageRating} duration={item.duration} />
           )}
         //   <View>
 

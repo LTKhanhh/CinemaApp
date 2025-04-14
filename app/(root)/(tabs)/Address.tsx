@@ -1,7 +1,7 @@
 import { View, Text, SafeAreaView, ScrollView } from 'react-native'
 import React from 'react'
 import CinemaCity from '@/components/CinemaCity'
-
+import { LinearGradient } from 'expo-linear-gradient'
 const datas = [
     {
         city: "Hà Nội",
@@ -61,10 +61,21 @@ const datas = [
 ]
 const Address = () => {
     return (
-        <SafeAreaView className='h-full px-1 bg-[#ffffff]'>
-            <View className="px-4 pt-4 pb-4 flex w-full border-b bg-[#ffffff] border-[#eeeeee] flex-row items-center justify-between">
-                <Text className='text-xl font-rubik-bold '>Rạp phim NEMUI</Text>
-            </View>
+        <View className='h-full  bg-[#ffffff]'>
+
+            <LinearGradient
+                colors={['#3674B5', '#A1E3F9']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+
+            >
+                <View className="px-4 pt-14 pb-4 flex w-full border-b bg-[#ffffff] border-[#eeeeee] flex-row items-center justify-between">
+                    <Text className='text-xl font-rubik-bold '>Rạp phim NEMUI</Text>
+                </View>
+            </LinearGradient>
+
+
+
 
             <View className='bg-[#f7f7f7] px-2'>
                 <Text className='text-xl font-rubik-semibold capitalize my-2 text-[#6e6e6e]'>Chọn rạp theo khu vực</Text>
@@ -76,7 +87,7 @@ const Address = () => {
                 ))}
                 <View className='mb-32'></View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     )
 }
 

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, Image, Pressable } from 'react-native'
+import { View, Text, ScrollView, Image, Pressable, Alert } from 'react-native'
 import React from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import icons from '@/constants/icons'
@@ -6,37 +6,43 @@ import LoginForm from '@/components/LoginForm'
 import { TouchableOpacity } from 'react-native'
 import { Link, useNavigation, Redirect } from 'expo-router'
 import { useDispatch } from 'react-redux'
-import { AppDispatch, getCurrentUserAppwrite, loginAppwrite } from '@/redux/actions/authActions'
+import { AppDispatch, getCurrentUserAppwrite } from '@/redux/actions/authActions'
 import { RootState } from "@/redux/actions/authActions";
 import { useSelector } from "react-redux";
 import { useEffect } from 'react'
-// import { useGlobalContext } from '@/lib/global-provider'
-// import { loginAppwrite } from '@/lib/appwrite'
+import { useGlobalContext } from '@/lib/global-provider'
+import { loginAppwrite } from '@/lib/appwrite'
 const login = () => {
-    const dispatch = useDispatch<AppDispatch>()
+    // const dispatch = useDispatch<AppDispatch>()
     // const { refetch, loading, isLogged } = useGlobalContext();
 
-    const { user, isLogged, loading } = useSelector(
-        (state: RootState) => state.auth
-    );
+    // const { user, isLogged, loading } = useSelector(
+    //     (state: RootState) => state.auth
+    // );
 
     // if (!loading && isLogged) return <Redirect href="/" />;
 
     // if (!loading && isLogged) return <Redirect href="/" />;
 
-    const handleLogin = () => {
-        dispatch(loginAppwrite());
-    };
+    const { refetch, loading, isLogged } = useGlobalContext();
+
+    if (!loading && isLogged) return <Redirect href="/" />;
+
+    if (!loading && isLogged) return <Redirect href="/" />;
+
+    // const handleLogin = () => {
+    //     dispatch(loginAppwrite());
+    // };
 
 
-    // const handleLogin = async () => {
-    //     const result = await loginAppwrite();
-    //     if (result) {
-    //         refetch();
-    //     } else {
-    //         // Alert.alert("Error", "Failed to login");
-    //     }
-    // }
+    const handleLogin = async () => {
+        const result = await loginAppwrite();
+        if (result) {
+            refetch();
+        } else {
+            Alert.alert("Error", "Failed to login");
+        }
+    }
 
     const navigate = useNavigation()
     return (
