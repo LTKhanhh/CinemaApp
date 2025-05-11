@@ -4,7 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import icons from '@/constants/icons'
 import LoginForm from '@/components/LoginForm'
 import { TouchableOpacity } from 'react-native'
-import { Link, useNavigation, Redirect } from 'expo-router'
+import { Link, useNavigation, Redirect, useRouter } from 'expo-router'
 import { useDispatch } from 'react-redux'
 import { AppDispatch, getCurrentUserAppwrite } from '@/redux/actions/authActions'
 import { RootState } from "@/redux/actions/authActions";
@@ -44,11 +44,11 @@ const login = () => {
         }
     }
 
-    const navigate = useNavigation()
+    const router = useRouter()
     return (
         <ScrollView className='w-full' >
             <View className='pb-2 w-full items-center pt-[60px] flex-row bg-primary-300'>
-                <Pressable onPress={() => navigate.goBack()}>
+                <Pressable onPress={() => router.navigate('..')}>
                     <Image source={icons.leftarrow} className='size-11' tintColor="white" />
                 </Pressable>
                 <Text className='text-2xl font-rubik-bold text-white'>Đăng nhập</Text>

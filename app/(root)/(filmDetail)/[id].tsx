@@ -28,7 +28,7 @@ interface Film {
 }
 const DetailPage = () => {
     const navigation = useNavigation()
-    const { id } = useLocalSearchParams();
+    const { id } = useLocalSearchParams<{ id: string }>();
 
     const [film, setFilm] = useState<Film>()
 

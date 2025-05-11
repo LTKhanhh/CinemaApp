@@ -46,8 +46,8 @@ const FilmInfo = ({ image, title, ageRating, director, actors, duration, genres,
                 <View className='flex-row mt-2 text-[#03599d]'>
                     <Text className='font-rubik-bold uppercase w-[160px] text-[15px] text-[#004477]'>diễn viên</Text>
                     <View>
-                        {actors?.map(actor => (
-                            <Text className='text-[15px] font-rubik'>{actor}</Text>
+                        {actors?.map((actor, idx) => (
+                            <Text key={idx} className='text-[15px] font-rubik'>{actor}</Text>
                         ))}
                     </View>
                 </View>

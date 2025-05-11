@@ -35,7 +35,7 @@ const CinemaCity = ({ city, cinemas }: cityListCinema) => {
                 <FlatList
                     data={cinemas}
                     renderItem={({ item }) => (
-                        <CinemaCard name={item.name} distance={item.distance}
+                        <CinemaCard id='1' name={item.name} distance={item.distance}
                         />
                     )}
                     // keyExtractor={(item) => item.toString()}

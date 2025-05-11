@@ -22,7 +22,7 @@ const data = [
 const Voucher = () => {
     const navigate = useNavigation()
     return (
-        <SafeAreaView className='h-full px-1 bg-blue-400'>
+        <SafeAreaView className='h-full  bg-blue-400'>
             <View className="px-4 pt-4 pb-4 flex w-full border-b bg-blue-400 border-[#eeeeee] flex-row items-center justify-between">
                 <View>
                     <Text className='text-xl font-rubik-bold text-white'>Rạp phim NEMUI</Text>

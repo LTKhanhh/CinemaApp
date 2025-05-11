@@ -2,6 +2,7 @@ import { View, Text, SafeAreaView, ScrollView } from 'react-native'
 import React from 'react'
 import CinemaCity from '@/components/CinemaCity'
 import { LinearGradient } from 'expo-linear-gradient'
+import { useNavigation } from 'expo-router'
 const datas = [
     {
         city: "Hà Nội",
@@ -60,6 +61,7 @@ const datas = [
     }
 ]
 const Address = () => {
+    const navigation = useNavigation()
     return (
         <View className='h-full  bg-[#ffffff]'>
 

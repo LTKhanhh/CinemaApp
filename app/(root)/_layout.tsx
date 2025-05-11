@@ -1,5 +1,5 @@
 import { Redirect, Slot } from "expo-router";
-import { ActivityIndicator, TouchableWithoutFeedback, Keyboard } from "react-native";
+import { ActivityIndicator, TouchableWithoutFeedback, Keyboard, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { RootState } from "@/redux/actions/authActions";

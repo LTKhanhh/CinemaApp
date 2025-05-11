@@ -3,8 +3,10 @@ import React, { useState } from 'react'
 import icons from '@/constants/icons'
 import Voucher from '../(tabs)/Voucher'
 import { useRouter } from 'expo-router'
+import { useGlobalContext } from '@/lib/global-provider'
 // import { Link } from 'expo-router'
-const AddressCard = ({ title, link }: { title: string, link?: string }) => {
+const AddressCard = ({ title, link, id }: { title: string, link?: string, id: string }) => {
+    const { isLogged } = useGlobalContext()
     const [more, setMore] = useState(false)
     console.log(more)
     const router = useRouter()
@@ -21,28 +23,28 @@ const AddressCard = ({ title, link }: { title: string, link?: string }) => {
 
                 <ScrollView className='pl-3' showsHorizontalScrollIndicator={false} horizontal={true} >
                     <View className='items-center mr-4'>
-                        <TouchableOpacity onPress={() => router.navigate("/(root)/(booking)/second")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
+                        <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: id } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
                             <Text className='font-bold'>19:00</Text>
                         </TouchableOpacity>
                         <Text className='text-[#444] text-[13px] mt-1'>35 trống</Text>
                     </View>
 
                     <View className='items-center mr-4'>
-                        <TouchableOpacity className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
+                        <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: id } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
                             <Text className='font-bold'>19:00</Text>
                         </TouchableOpacity>
                         <Text className='text-[#444] text-[13px] mt-1'>35 trống</Text>
                     </View>
 
                     <View className='items-center mr-4'>
-                        <TouchableOpacity className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
+                        <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: id } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
                             <Text className='font-bold'>19:00</Text>
                         </TouchableOpacity>
                         <Text className='text-[#444] text-[13px] mt-1'>35 trống</Text>
                     </View>
 
                     <View className='items-center mr-4'>
-                        <TouchableOpacity className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
+                        <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: id } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
                             <Text className='font-bold'>19:00</Text>
                         </TouchableOpacity>
                         <Text className='text-[#444] text-[13px] mt-1'>35 trống</Text>

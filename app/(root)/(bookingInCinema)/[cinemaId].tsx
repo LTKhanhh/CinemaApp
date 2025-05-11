@@ -3,12 +3,12 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, Redirect } from 'expo-router';
 import { useLocalSearchParams } from "expo-router";
 import icons from '@/constants/icons';
-import InfoFilm from './InfoFilm';
-import AddressCard from './AddressCard';
-const BookingPage = () => {
+import FilterTime from './filterTime';
+import FilmCard from './FilmCard';
+
+const Page = () => {
     const navigation = useNavigation()
-    const { id } = useLocalSearchParams<{ id: string }>();
-    console.log(id)
+    const { cinemaId } = useLocalSearchParams<{ cinemaId: string }>();
 
 
     return (
@@ -25,7 +25,7 @@ const BookingPage = () => {
                             <Pressable onPress={navigation.goBack}>
                                 <Image source={icons.leftarrow} className='size-9 mr-4' tintColor={'white'}></Image>
                             </Pressable>
-                            <Text className='text-2xl font-rubik-semibold text-white'>Đặt vé theo phim</Text>
+                            <Text className='text-2xl font-rubik-semibold text-white'>Đặt vé theo rạp</Text>
 
                         </View>
                     </View>
@@ -33,17 +33,21 @@ const BookingPage = () => {
                 </LinearGradient>
             </View>
 
-            <ScrollView className='flex-1 mb-10'>
-                <InfoFilm id={id} />
+            <ScrollView className='flex-1 mb-10 bg-[#f7f7f7]'>
 
-                <AddressCard id={id} title='Giải phóng' />
-                <AddressCard id={id} title='Giải phóng' />
-                <AddressCard id={id} title='Giải phóng' />
-                <AddressCard id={id} title='Giải phóng' />
+                <View className='py-6 border-b border-[#ccc] mx-6'>
+                    <Text className='font-rubik-semibold text-[18px]  text-center'>Nemui Thanh Xuân</Text>
+                </View>
 
+                <FilterTime />
+
+                <View className='px-3'>
+                    <FilmCard />
+
+                </View>
             </ScrollView>
         </View>
     )
 }
 
-export default BookingPage
+export default Page
