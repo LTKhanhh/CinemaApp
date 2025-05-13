@@ -1,15 +1,19 @@
-import { View, Text, Image, TextInput } from 'react-native'
-import React from 'react'
+import { View, Text, Image, TextInput, Pressable } from 'react-native'
+import React, { useState } from 'react'
 import { ImageSourcePropType } from 'react-native'
+import { Eye, EyeOff } from 'react-native-feather'
 interface Props {
     icons?: ImageSourcePropType | undefined,
     value: string,
     placeholder: string,
     setValue: React.Dispatch<React.SetStateAction<string>>,
     inputClass?: string
+    password?: boolean
 }
 
-const InputCard = ({ icons, value, placeholder, setValue, inputClass }: Props) => {
+const InputCard = ({ icons, value, placeholder, setValue, inputClass, password }: Props) => {
+    const [show, setShow] = useState(password)
+
     return (
         <>
             {icons ?
@@ -23,14 +27,33 @@ const InputCard = ({ icons, value, placeholder, setValue, inputClass }: Props) =
 
 
                     <View className={`flex-1 justify-center  ${inputClass ? inputClass : ""}`}>
-                        <TextInput value={value} onChangeText={e => setValue(e)} placeholder={placeholder} className={`flex-1 text-xl  font-rubik text-black ${inputClass ? inputClass : ""}`} placeholderTextColor="#ccc" />
+                        <TextInput secureTextEntry={show} value={value} onChangeText={e => setValue(e)} placeholder={placeholder} className={`flex-1 text-xl  font-rubik text-black ${inputClass ? inputClass : ""}`} placeholderTextColor="#ccc" />
                     </View>
+
+                    {/* {
+                        password &&
+                        <View>
+                            <Text>123</Text>
+                        </View>
+                    } */}
+                    {
+                        password &&
+                        <Pressable onPress={() => setShow(prev => !prev)}>
+                            {
+                                show ?
+                                    <EyeOff stroke="#666" width={20} height={20}></EyeOff>
+                                    :
+                                    <Eye stroke="#666" width={20} height={20}></Eye>
+                            }
+                        </Pressable>
+                    }
+
 
                 </View> :
 
                 <View className={'flex-row border py-4 pb-5 mt-2 border-[#ccc] rounded-md px-2 items-center mb-6'}>
                     {/* <View className='py-2 flex-1'> */}
-                    <TextInput value={value} onChangeText={e => setValue(e)} placeholder={placeholder} className={`flex-1 text-xl  font-rubik text-black `} placeholderTextColor="#ccc" />
+                    <TextInput secureTextEntry={show} value={value} onChangeText={e => setValue(e)} placeholder={placeholder} className={`flex-1 text-xl  font-rubik text-black `} placeholderTextColor="#ccc" />
                     {/* </View> */}
                 </View>
 

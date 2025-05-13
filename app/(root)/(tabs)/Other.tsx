@@ -4,9 +4,9 @@ import OtherCard from '@/components/OtherCard'
 import icons from '@/constants/icons'
 import { Link } from 'expo-router'
 
-import { useGlobalContext } from '@/lib/global-provider'
+import { useAuthContext } from '@/lib/auth-provider'
 const Other = () => {
-    const { loading, isLogged } = useGlobalContext();
+    const { loading, isLogged } = useAuthContext();
 
     return (
         <SafeAreaView className='bg-white px-3 h-full'>

@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosInstance, AxiosResponse } from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { refreshTokenResType } from '@/schemaValidations/auth.schema';
 
 // HTTP Error class for error handling
 export class HttpError extends Error {
@@ -15,7 +16,7 @@ export class HttpError extends Error {
 // Create Axios instance with default configuration
 const apiClient: AxiosInstance = axios.create({
     // baseURL: process.env.EXPO_PUBLIC_API_ENDPOINT,
-    baseURL: "http://localhost:8080/api/v1",
+    baseURL: "http://10.0.2.2",
     headers: {
         'Content-Type': 'application/json',
     },
@@ -26,7 +27,7 @@ const apiClient: AxiosInstance = axios.create({
 export const TokenManager = {
     async getToken(): Promise<string | null> {
         try {
-            return await AsyncStorage.getItem('auth_token');
+            return await AsyncStorage.getItem('accessToken');
         } catch (error) {
             console.error('Error getting token:', error);
             return null;
@@ -35,38 +36,42 @@ export const TokenManager = {
 
     async setToken(token: string): Promise<void> {
         try {
-            await AsyncStorage.setItem('auth_token', token);
+            await AsyncStorage.setItem('accessToken', token);
         } catch (error) {
             console.error('Error setting token:', error);
         }
     },
 
-    async removeToken(): Promise<void> {
+    async getRefreshToken(): Promise<string | null> {
         try {
-            await AsyncStorage.removeItem('auth_token');
-            await AsyncStorage.removeItem('isLogin');
+            return await AsyncStorage.getItem('refreshToken');
+        } catch (error) {
+            console.error('Error getting token:', error);
+            return null;
+        }
+    },
+
+    async setRefreshToken(token: string): Promise<void> {
+        try {
+            await AsyncStorage.setItem('refreshToken', token);
+        } catch (error) {
+            console.error('Error setting token:', error);
+        }
+    },
+
+    async removeToken(): Promise<boolean> {
+        try {
+            await AsyncStorage.removeItem('accessToken');
+            await AsyncStorage.removeItem('refreshToken');
+
+            return true
         } catch (error) {
             console.error('Error removing token:', error);
+            return false
         }
     },
 
-    async isLoggedIn(): Promise<boolean> {
-        try {
-            const value = await AsyncStorage.getItem('isLogin');
-            return value === 'true';
-        } catch (error) {
-            console.error('Error checking login status:', error);
-            return false;
-        }
-    },
 
-    async setIsLoggedIn(isLoggedIn: boolean): Promise<void> {
-        try {
-            await AsyncStorage.setItem('isLogin', isLoggedIn ? 'true' : 'false');
-        } catch (error) {
-            console.error('Error setting login status:', error);
-        }
-    }
 };
 
 // Request interceptor to add auth token to each request
@@ -85,15 +90,43 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
     response => response,
     async (error) => {
-        if (error.response && error.response.status === 401) {
-            // Handle unauthorized error (e.g., token expired)
-            await TokenManager.removeToken();
-            // You might want to redirect to login screen here
-            // For example: navigation.navigate('Login');
+        const originalRequest = error.config;
+
+        // Tránh lặp vô hạn khi refreshToken cũng bị lỗi
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+
+            try {
+                const refreshToken = await TokenManager.getRefreshToken();
+                if (!refreshToken) {
+                    throw new Error("No refresh token available");
+                }
+
+                const refreshResponse = await http.put<refreshTokenResType>('/auth/refresh', null, {
+                    headers: {
+                        'x-refresh-token': `Bearer ${refreshToken}`,
+                    }
+                });
+
+                const { accessToken, refreshToken: newRefreshToken } = refreshResponse.payload.data;
+
+                await TokenManager.setToken(accessToken);
+                await TokenManager.setRefreshToken(newRefreshToken);
+
+                // Gắn token mới vào headers và gửi lại request cũ
+                originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+                return apiClient(originalRequest);
+            } catch (refreshError) {
+                await TokenManager.removeToken();
+                // Nếu cần chuyển hướng về login có thể gọi thêm hàm navigate ở đây
+                return Promise.reject(refreshError);
+            }
         }
+
         return Promise.reject(error);
     }
 );
+
 
 // Generic request function
 const request = async <Response>(

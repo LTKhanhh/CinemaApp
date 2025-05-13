@@ -1,8 +1,10 @@
 import { View, Text, SafeAreaView, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import CinemaCity from '@/components/CinemaCity'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from 'expo-router'
+import { getAllCinemaType } from '@/schemaValidations/cinema.schema'
+import cinemaApiRequest from '@/apiRequest/cinema'
 const datas = [
     {
         city: "Hà Nội",
@@ -61,7 +63,23 @@ const datas = [
     }
 ]
 const Address = () => {
+    const [cinemas, setCinemas] = useState<getAllCinemaType>({})
     const navigation = useNavigation()
+
+    useEffect(() => {
+        const controller = new AbortController()
+
+        const getData = async () => {
+            try {
+                const res = await cinemaApiRequest.getAll(controller)
+                console.log(res)
+                setCinemas(res.payload)
+            } catch (error) {
+
+            }
+        }
+        getData()
+    }, [])
     return (
         <View className='h-full  bg-[#ffffff]'>
 

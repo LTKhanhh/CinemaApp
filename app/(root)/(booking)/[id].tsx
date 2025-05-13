@@ -8,8 +8,6 @@ import AddressCard from './AddressCard';
 const BookingPage = () => {
     const navigation = useNavigation()
     const { id } = useLocalSearchParams<{ id: string }>();
-    console.log(id)
-
 
     return (
         <View className='flex-1'>

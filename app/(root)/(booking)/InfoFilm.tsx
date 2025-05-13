@@ -24,7 +24,7 @@ interface Film {
     trailerUrl: string;
     status: string;
 }
-const InfoFilm = ({ id }: { id: string | string[] }) => {
+const InfoFilm = ({ id }: { id: string }) => {
     const router = useRouter()
 
     const [film, setFilm] = useState<Film>()

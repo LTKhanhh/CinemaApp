@@ -7,13 +7,16 @@ import { Link, useNavigation } from "expo-router";
 import Filter from "@/components/Filter";
 import FeatureCard from "@/components/FeatureCard";
 import { NativeSyntheticEvent, NativeScrollEvent } from "react-native";
-import { useState, useRef } from "react";
-import { useGlobalContext } from "@/lib/global-provider";
+import { useState, useRef, useEffect } from "react";
 import { blue300 } from "react-native-paper/lib/typescript/styles/themes/v2/colors";
 import { data, dataBanner } from './datatest'
+import { getAllFilmResType } from "@/schemaValidations/film.schema";
+import filmApiRequest from "@/apiRequest/film";
+import { useAuthContext } from "@/lib/auth-provider";
 
 export default function Index() {
-  const { loading, isLogged } = useGlobalContext();
+  const [films, setFilms] = useState<getAllFilmResType>([])
+  const { loading, isLogged, user } = useAuthContext();
 
   const [activeIndex, setActiveIndex] = useState(0)
   const { width } = useWindowDimensions()
@@ -42,6 +45,22 @@ export default function Index() {
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   }).current
+
+  useEffect(() => {
+    const controller = new AbortController()
+
+    const getFilms = async () => {
+      try {
+        const res = await filmApiRequest.getAll(controller)
+        console.log(res)
+        setFilms(res.payload)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getFilms()
+  }, [])
+
   return (
     < SafeAreaView className="h-full px-1 bg-[#ffffff]" >
       <View>
@@ -61,7 +80,7 @@ export default function Index() {
                   <Image className="border rounded-full size-11" source={icons.person} />
                 </Link>
                 <View className="justify-between">
-                  <Text className="text-[13px]">Chào, <Text className="font-semibold">Lê Trọng Khánh</Text></Text>
+                  <Text className="text-[13px]">Chào, <Text className="font-semibold">{user?.name}</Text></Text>
 
                   <View className="flex-row">
                     <View className="flex-row items-center">
@@ -115,26 +134,7 @@ export default function Index() {
           renderItem={({ item }) => (
             <Card id={item._id.$oid} title={item.title} posterUrl={item.posterUrl} ageRating={item.ageRating} duration={item.duration} />
           )}
-        //   <View>
 
-        //     <View className="px-4 pb-4 flex w-full border-b border-[#f0f0f0] flex-row items-center justify-between">
-        //       <TouchableOpacity className=" p-2 mb-2 rounded-lg flex-row items-center border border-[#06599d] justify-between">
-        //         <Link href={"/login"} >
-        //           <Image source={icons.person} tintColor="#06599d" className="size-6 mr-2" />
-        //           <View>
-        //             <Text className="font-rubik-semibold text-primary-300">Đăng nhập</Text>
-        //           </View>
-        //         </Link>
-        //       </TouchableOpacity>
-        //       <Image source={icons.people} className="size-6" />
-        //     </View>
-        //     <Filter />
-
-
-        //      
-        //   </View>
-
-        // )}      // ListHeaderComponent={() => (
 
         />
       </ScrollView>

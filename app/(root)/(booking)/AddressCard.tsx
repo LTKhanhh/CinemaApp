@@ -3,10 +3,10 @@ import React, { useState } from 'react'
 import icons from '@/constants/icons'
 import Voucher from '../(tabs)/Voucher'
 import { useRouter } from 'expo-router'
-import { useGlobalContext } from '@/lib/global-provider'
+import { useAuthContext } from '@/lib/auth-provider'
 // import { Link } from 'expo-router'
 const AddressCard = ({ title, link, id }: { title: string, link?: string, id: string }) => {
-    const { isLogged } = useGlobalContext()
+    const { isLogged } = useAuthContext()
     const [more, setMore] = useState(false)
     console.log(more)
     const router = useRouter()

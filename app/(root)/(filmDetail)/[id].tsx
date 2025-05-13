@@ -8,6 +8,8 @@ import FilmInfo from './FilmInfo';
 import { useLocalSearchParams } from 'expo-router';
 
 import { useState, useEffect } from 'react';
+import { getOneFilmResType } from '@/schemaValidations/film.schema';
+import filmApiRequest from '@/apiRequest/film';
 interface Film {
     _id: {
         $oid: string;
@@ -34,6 +36,23 @@ const DetailPage = () => {
 
     useEffect(() => {
         setFilm(data.find(item => item._id.$oid == id))
+    }, [id])
+
+    const [filmInfo, setFilmInfo] = useState<getOneFilmResType>()
+
+    useEffect(() => {
+        const controller = new AbortController()
+
+        const getData = async () => {
+            try {
+                const res = await filmApiRequest.getOne(id, controller)
+                console.log(res)
+                setFilmInfo(res.payload)
+            } catch (error) {
+
+            }
+        }
+        getData()
     }, [id])
     return (
         <View className='flex-1'>

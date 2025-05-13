@@ -1,10 +1,10 @@
 import { View, Text, Image } from 'react-native'
 import React from 'react'
 import images from '@/constants/images'
-import { useGlobalContext } from "@/lib/global-provider";
+import { useAuthContext } from '@/lib/auth-provider';
 
 const ProfileCard = () => {
-    const { loading, isLogged } = useGlobalContext();
+    const { loading, isLogged, user } = useAuthContext();
 
     return (
         <View className=' relative'>
@@ -26,7 +26,7 @@ const ProfileCard = () => {
 
             <View className='px-2 '>
                 <View className='bg-white rounded-md pt-[70px] '>
-                    <Text className='text-center text-2xl font-semibold'>Lê Trọng Khánh</Text>
+                    <Text className='text-center text-2xl font-semibold'>{user?.name}</Text>
                     <View className='flex-row justify-between items-center my-3 px-2'>
                         <Text className='text-[#666] text-[14px]'>Thẻ thành viên</Text>
 
@@ -38,7 +38,7 @@ const ProfileCard = () => {
                     <View className='flex-row justify-between border-t border-[#ccc]  border-b'>
                         <View className='border-r py-3 flex-1 items-center  border-[#ccc]  justify-center'>
                             <Text className='text-[#666] mb-4 text-[14px]'>Tổng chi tiêu</Text>
-                            <Text className='text-2xl text-[#29588a] font-bold '>238.000đ</Text>
+                            <Text className='text-2xl text-[#29588a] font-bold '>{user?.price || 0}đ</Text>
                         </View>
                         <View className='py-3 flex-1 items-center justify-center'>
                             <Text className='text-[#666] mb-4 text-[14px]'>Điểm thưởng</Text>

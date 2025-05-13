@@ -12,7 +12,8 @@ import InfoFilm from './InfoFilm';
 import Chair from '../(booking)/Chair';
 const chairRow = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
 const chairCol = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-import { useGlobalContext } from '@/lib/global-provider';
+import { useAuthContext } from '@/lib/auth-provider';
+import NextStep from './nextStep';
 
 // Define interfaces for chair selection
 interface SelectedChair {
@@ -119,14 +120,14 @@ async function unregisterBackgroundFetchAsync() {
 }
 
 const SecondBookingPage = () => {
-    const { isLogged } = useGlobalContext();
+    const { isLogged } = useAuthContext();
     const { id } = useGlobalSearchParams<{ id: string }>();
     const navigation = useNavigation<any>();
     const [timeRemaining, setTimeRemaining] = useState<number>(600); // 10 phút tính bằng giây
     const [selectedChairs, setSelectedChairs] = useState<SelectedChair[]>([]); // Mảng lưu ghế đã chọn
     const [totalPrice, setTotalPrice] = useState<number>(0); // Tổng giá tiền
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-
+    const [step, setStep] = useState(1)
     // Khởi tạo bộ đếm thời gian và lưu thời gian kết thúc
     useEffect(() => {
         const setupBookingTimer = async () => {
@@ -280,7 +281,8 @@ const SecondBookingPage = () => {
             // });
 
             // Tạm thời hiển thị thông báo
-            Alert.alert("Thông báo", `Đã chọn ${selectedChairs.length} ghế với tổng tiền ${formatPrice(totalPrice)}`);
+            // Alert.alert("Thông báo", `Đã chọn ${selectedChairs.length} ghế với tổng tiền ${formatPrice(totalPrice)}`);
+            setStep(2)
         } catch (error) {
             console.error("Lỗi khi chuyển trang:", error);
             Alert.alert("Lỗi", "Không thể tiếp tục. Vui lòng thử lại sau.");
@@ -300,125 +302,136 @@ const SecondBookingPage = () => {
     // }
 
     return (
+
         <View className='flex-1'>
-            <View className='h-[100px]'>
-                <LinearGradient
-                    colors={['#3674B5', '#A1E3F9']}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                >
-                    <View className='w-full h-full justify-end pl-2 pb-2'>
-                        <View className='flex-row items-center justify-between pr-4'>
-                            <View className='flex-row items-center'>
-                                <Pressable onPress={navigation.goBack}>
-                                    <Image source={icons.leftarrow} className='size-9 mr-4' tintColor={'white'}></Image>
-                                </Pressable>
-                                <Text className='text-2xl font-rubik-semibold text-white'>Đặt vé theo phim</Text>
-                            </View>
-                            <View className='bg-white p-2 rounded-lg'>
-                                <Text className='text-red-500 font-bold'>{formatTime(timeRemaining)}</Text>
-                            </View>
-                        </View>
-                    </View>
-                </LinearGradient>
-            </View>
-
-            <ScrollView className='flex-1 mb-24'>
-                <InfoFilm id={id} />
-
-                <View className='px-3 py-4 border-b flex-row justify-between pr-5'>
-                    <View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
-                            <Text className='ml-2'>Ghế trống</Text>
-                        </View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"blue"} source={icons.chair} />
-                            <Text className='ml-2'>Ghế đang <Text>được giữ</Text></Text>
-                        </View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"violet"} source={icons.chair} />
-                            <Text className='ml-2'>Ghế đang chọn</Text>
-                        </View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"red"} source={icons.chair} />
-                            <Text className='ml-2'>Ghế đã bán</Text>
-                        </View>
-                        <View className='flex-row items-center'>
-                            <Image className='size-8' tintColor={"yellow"} source={icons.chair} />
-                            <Text className='ml-2'>Ghế đã đặt trước</Text>
-                        </View>
-                    </View>
-
-                    <View className='justify-between items-end pr-8'>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"#ccc"} source={icons.chair3} />
-                            <View className='ml-2'>
-                                <Text className=' font-semibold'>Ghế thường</Text>
-                                <Text className='font-bold text-[13px]'>85.000đ</Text>
-                            </View>
-                        </View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
-                            <View className='ml-2'>
-                                <Text className=' font-semibold'>Ghế Vip</Text>
-                                <Text className='font-bold text-[13px]'>85.000đ</Text>
-                            </View>
-                        </View>
-                        <View className='flex-row mb-4 items-center'>
-                            <Image resizeMode='cover' className='h-8 w-16' tintColor={"#ccc"} source={icons.chair2} />
-                            <View className='ml-2'>
-                                <Text className=' font-semibold'>Ghế đôi</Text>
-                                <Text className='font-bold text-[13px]'>85.000đ</Text>
-                            </View>
-                        </View>
-                    </View>
-                </View>
-
-                <View className='px-6 py-4'>
-                    <Text className='text-lg text-center text-[#666]'>Màn hình chiếu</Text>
-
-                    {chairRow.map((row, idx) => (
-                        <View className='flex-row mb-2' key={idx}>
-                            {
-                                chairCol.map((col, colIdx) => {
-                                    const chairName = row + col;
-                                    const isSelected = selectedChairs.some(chair => chair.name === chairName);
-
-                                    return (
-                                        <Pressable
-                                            key={colIdx}
-                                            onPress={() => handleChairSelect(chairName)}
-                                        >
-                                            <Chair
-                                                name={chairName}
-                                                type={icons.chair3}
-                                                tintColor={isSelected ? "violet" : "#ccc"}
-                                            />
+            {step == 1 &&
+                <>
+                    <View className='h-[100px]'>
+                        <LinearGradient
+                            colors={['#3674B5', '#A1E3F9']}
+                            start={{ x: 0, y: 0 }}
+                            end={{ x: 1, y: 0 }}
+                        >
+                            <View className='w-full h-full justify-end pl-2 pb-2'>
+                                <View className='flex-row items-center justify-between pr-4'>
+                                    <View className='flex-row items-center'>
+                                        <Pressable onPress={navigation.goBack}>
+                                            <Image source={icons.leftarrow} className='size-9 mr-4' tintColor={'white'}></Image>
                                         </Pressable>
-                                    );
-                                })
-                            }
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
-
-            {/* Fixed bottom section for selected seats info */}
-            {selectedChairs.length > 0 && (
-                <View className='absolute bottom-0 left-0 right-0 bg-white border-t border-gray-300 py-3 px-4 flex-row justify-between items-center'>
-                    <View>
-                        <Text className='font-medium'>Ghế đã chọn: {selectedChairs.map(chair => chair.name).join(', ')}</Text>
-                        <Text className='font-bold text-blue-600'>Tổng tiền: {formatPrice(totalPrice)}</Text>
+                                        <Text className='text-2xl font-rubik-semibold text-white'>Đặt vé theo phim</Text>
+                                    </View>
+                                    <View className='bg-white p-2 rounded-lg'>
+                                        <Text className='text-red-500 font-bold'>{formatTime(timeRemaining)}</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </LinearGradient>
                     </View>
-                    <Pressable
-                        onPress={handleContinue}
-                        className='bg-blue-500 py-2 px-4 rounded-lg'
-                    >
-                        <Text className='font-bold text-white'>Tiếp tục</Text>
-                    </Pressable>
-                </View>
-            )}
+
+                    <ScrollView className='flex-1 mb-24'>
+                        <InfoFilm id={id} />
+
+                        <View className='px-3 py-4 border-b flex-row justify-between pr-5'>
+                            <View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế trống</Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"blue"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đang <Text>được giữ</Text></Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"violet"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đang chọn</Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"red"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đã bán</Text>
+                                </View>
+                                <View className='flex-row items-center'>
+                                    <Image className='size-8' tintColor={"yellow"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đã đặt trước</Text>
+                                </View>
+                            </View>
+
+                            <View className='justify-between items-end pr-8'>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair3} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế thường</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế Vip</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image resizeMode='cover' className='h-8 w-16' tintColor={"#ccc"} source={icons.chair2} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế đôi</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View className='px-6 py-4'>
+                            <Text className='text-lg text-center text-[#666]'>Màn hình chiếu</Text>
+
+                            {chairRow.map((row, idx) => (
+                                <View className='flex-row mb-2' key={idx}>
+                                    {
+                                        chairCol.map((col, colIdx) => {
+                                            const chairName = row + col;
+                                            const isSelected = selectedChairs.some(chair => chair.name === chairName);
+
+                                            return (
+                                                <Pressable
+                                                    key={colIdx}
+                                                    onPress={() => handleChairSelect(chairName)}
+                                                >
+                                                    <Chair
+                                                        name={chairName}
+                                                        type={icons.chair3}
+                                                        tintColor={isSelected ? "violet" : "#ccc"}
+                                                    />
+                                                </Pressable>
+                                            );
+                                        })
+                                    }
+                                </View>
+                            ))}
+                        </View>
+                    </ScrollView>
+
+                    {/* Fixed bottom section for selected seats info */}
+                    {selectedChairs.length > 0 && (
+                        <View className='absolute bottom-0 left-0 right-0 bg-white border-t border-gray-300 py-3 px-4 flex-row justify-between items-center'>
+                            <View>
+                                <Text className='font-medium'>Ghế đã chọn: {selectedChairs.map(chair => chair.name).join(', ')}</Text>
+                                <Text className='font-bold text-blue-600'>Tổng tiền: {formatPrice(totalPrice)}</Text>
+                            </View>
+                            <Pressable
+                                onPress={handleContinue}
+                                className='bg-blue-500 py-2 px-4 rounded-lg'
+                            >
+                                <Text className='font-bold text-white'>Tiếp tục</Text>
+                            </Pressable>
+                        </View>
+                    )}
+                </>
+            }
+
+            {
+                step == 2 &&
+                <NextStep setStep={setStep} timeRemaining={timeRemaining}></NextStep>
+            }
+
         </View>
     )
 }

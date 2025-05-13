@@ -1,12 +1,12 @@
-import { View, Text, ScrollView, Image, Button, TextInput, Alert, Pressable } from 'react-native'
+import { View, Text, ScrollView, Image, Button, TextInput, Alert, Pressable, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
 import icons from '@/constants/icons'
-import LoginForm from '@/components/LoginForm'
-import { TouchableOpacity } from 'react-native'
-import { RadioButton } from 'react-native-paper';
 import InputCard from '@/components/InputCard'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
+import authApiRequest from '@/apiRequest/auth'
+
+import DatePicker from "react-native-date-picker";
+import { ChevronDown } from 'react-native-feather'
 
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -23,6 +23,7 @@ const register = () => {
     const [sex, setSex] = useState("")
     const [checked, setChecked] = useState(false)
     const navigate = useNavigation()
+    const router = useRouter()
     const validInfo = () => {
         if (!checked) {
             Alert.alert("Bạn phải đồng ý với điều khoản sử dụng của chúng tôi", "", [{ text: "OK" }])
@@ -66,8 +67,35 @@ const register = () => {
         if (!validInfo()) {
             return
         }
+        const body = {
+            name: name,
+            email: userName,
+            password: passWord,
+            birthday: dob
+        }
+        try {
+            const res = await authApiRequest.register(body)
+            console.log(res)
+            setName("")
+            setUserName("")
+            setPassWord("")
+            setPassWord2("")
+            setPhone("")
+            setDob("")
+            setSex("")
+            setChecked(false)
+            router.push("/login")
+
+        } catch (error) {
+            console.log(error)
+        }
 
     }
+
+    const [date, setDate] = useState<Date | null>(null);
+    const [open, setOpen] = useState(false);
+
+    const formattedDate = date ? date.toLocaleDateString("vi-VN") : "Chọn ngày";
     return (
         <ScrollView className='w-full' >
             <View className='pb-2 w-full items-center pt-[60px] flex-row bg-primary-300'>
@@ -87,11 +115,11 @@ const register = () => {
 
                     <InputCard icons={icons.email} value={userName} setValue={setUserName} placeholder='Email' />
 
-                    <InputCard icons={icons.lock} value={passWord} setValue={setPassWord} placeholder='Mật khẩu' />
+                    <InputCard password={true} icons={icons.lock} value={passWord} setValue={setPassWord} placeholder='Mật khẩu' />
 
-                    <InputCard icons={icons.lock} value={passWord2} setValue={setPassWord2} placeholder='Nhập lại mật khẩu' />
+                    <InputCard password={true} icons={icons.lock} value={passWord2} setValue={setPassWord2} placeholder='Nhập lại mật khẩu' />
 
-                    <InputCard icons={icons.phone} value={phone} setValue={setPhone} placeholder='Nhập lại mật khẩu' />
+                    <InputCard icons={icons.phone} value={phone} setValue={setPhone} placeholder='Nhập số điện thoại' />
 
                     <View className='mb-6'>
                         <Text className='font-rubik-medium text-2xl'>Thông tin bổ sung</Text>
@@ -100,6 +128,30 @@ const register = () => {
                     <InputCard icons={icons.birthdayCake} value={dob} setValue={setDob} placeholder='Ngày sinh' />
 
                     <InputCard icons={icons.sex} value={sex} setValue={setSex} placeholder='Giới tính' />
+
+                    <View className="mb-4">
+                        {/* Button chọn ngày */}
+                        <TouchableOpacity
+                            className="flex-row items-center justify-between bg-white border border-gray-300 rounded-lg px-4 py-2 shadow-sm"
+                            onPress={() => setOpen(true)}
+                        >
+                            <Text className="text-gray-700 text-lg">{formattedDate}</Text>
+                            <ChevronDown width={24} height={24} color="#888" />
+                        </TouchableOpacity>
+
+                        {/* DatePicker Modal */}
+                        {/* <DatePicker
+                            modal
+                            open={open}
+                            date={date || new Date()}
+                            mode="date"
+                            onConfirm={(selectedDate) => {
+                                setOpen(false);
+                                setDate(selectedDate);
+                            }}
+                            onCancel={() => setOpen(false)}
+                        /> */}
+                    </View>
 
                 </View>
 
@@ -134,3 +186,4 @@ const register = () => {
 }
 
 export default register
+

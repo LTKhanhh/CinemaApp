@@ -7,6 +7,7 @@ import GlobalProvider from "@/lib/global-provider";
 import { Provider } from "react-redux";
 import store from "@/redux/store";
 import { useDispatch } from "react-redux";
+import AuthProvider from "@/lib/auth-provider";
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -28,9 +29,9 @@ export default function RootLayout() {
 
   return (
     // <Provider store={store}>
-    <GlobalProvider>
+    <AuthProvider>
       <Stack screenOptions={{ headerShown: false }} />
-    </GlobalProvider>
+    </AuthProvider>
     // </Provider>
   );
 }

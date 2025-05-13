@@ -1,8 +1,8 @@
 import { View, Text, Image, ScrollView, TouchableOpacity, NativeSyntheticEvent, NativeScrollEvent } from 'react-native'
 import React, { useRef, useState } from 'react'
-import { useGlobalContext } from '@/lib/global-provider'
 import TimeCard from '@/components/TimeCard'
 import { ChevronLeft } from 'react-native-feather' // Make sure to install this package
+import { useAuthContext } from '@/lib/auth-provider'
 
 const poster = "https://files.betacorp.vn/media%2fimages%2f2025%2f03%2f31%2f400x633%2D24%2D165808%2D310325%2D29.jpg"
 
@@ -12,7 +12,7 @@ interface TimeCardProps {
 }
 
 const FilmCard: React.FC = () => {
-    const { isLogged } = useGlobalContext()
+    const { isLogged } = useAuthContext()
     const [showLeftChevron, setShowLeftChevron] = useState<boolean>(false)
     const scrollViewRef = useRef<ScrollView | null>(null)
 
@@ -52,7 +52,7 @@ const FilmCard: React.FC = () => {
                             onPress={scrollToStart}
                             className='absolute left-0 top-1/2 z-10'
                             style={{
-                                transform: [{ translateY: -15 }],
+                                transform: [{ translateY: -30 }],
                                 backgroundColor: 'rgba(0,0,0,0.2)',
                                 borderTopRightRadius: 8,
                                 borderBottomRightRadius: 8,
@@ -60,7 +60,7 @@ const FilmCard: React.FC = () => {
                                 zIndex: 999,
                             }}
                         >
-                            <ChevronLeft stroke="white" width={20} height={20} />
+                            <ChevronLeft stroke="white" width={16} height={40} />
                         </TouchableOpacity>
                     )}
 

@@ -23,7 +23,7 @@ interface Film {
     trailerUrl: string;
     status: string;
 }
-const InfoFilm = ({ id }: { id: string | string[] }) => {
+const InfoFilm = ({ id, step }: { id: string | string[], step?: number }) => {
 
     const [film, setFilm] = useState<Film>()
 
@@ -34,7 +34,7 @@ const InfoFilm = ({ id }: { id: string | string[] }) => {
         <View>
             <View className='relative'>
 
-                <Image className='w-full resize h-[160px]' source={{ "uri": film?.bannerUrl }} />
+                <Image className={`w-full resize ${step == 2 ? 'h-[260px]' : "h-[160px]"} `} source={{ "uri": film?.bannerUrl }} />
                 <View className='absolute w-full top-[50px] ' style={{
                     // Shadow không được hỗ trợ trực tiếp bằng class tailwind trong nativewind
                     // shadowColor: '#000',
@@ -44,7 +44,7 @@ const InfoFilm = ({ id }: { id: string | string[] }) => {
                     // elevation: 5,
                 }}>
                     <Text className='text-2xl font-rubik-semibold text-white capitalize text-center '>{film?.title}</Text>
-                    <Text className='text-sm font-rubik-semibold text-white capitalize text-center '>{film?.genres} | {film?.duration} phút</Text>
+                    <Text className='text-sm font-rubik-semibold text-white capitalize text-center '>{film?.genres.join(", ")} | {film?.duration} phút</Text>
                 </View>
 
 

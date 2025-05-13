@@ -12,50 +12,30 @@ import { useSelector } from "react-redux";
 import { useEffect } from 'react'
 import { useGlobalContext } from '@/lib/global-provider'
 import { loginAppwrite } from '@/lib/appwrite'
+import { useAuthContext } from '@/lib/auth-provider'
 const login = () => {
-    // const dispatch = useDispatch<AppDispatch>()
-    // const { refetch, loading, isLogged } = useGlobalContext();
+    const router = useRouter();
+    const { refetch, loading, isLogged } = useAuthContext();
 
-    // const { user, isLogged, loading } = useSelector(
-    //     (state: RootState) => state.auth
-    // );
-
-    // if (!loading && isLogged) return <Redirect href="/" />;
-
-    // if (!loading && isLogged) return <Redirect href="/" />;
-
-    const { refetch, loading, isLogged } = useGlobalContext();
-
-    if (!loading && isLogged) return <Redirect href="/" />;
-
-    if (!loading && isLogged) return <Redirect href="/" />;
-
-    // const handleLogin = () => {
-    //     dispatch(loginAppwrite());
-    // };
-
-
-    const handleLogin = async () => {
-        const result = await loginAppwrite();
-        if (result) {
-            refetch();
-        } else {
-            Alert.alert("Error", "Failed to login");
-        }
+    if (!loading && isLogged) {
+        return <Redirect href="/" />;
     }
 
-    const router = useRouter()
+    const handleBack = async () => {
+        router.push("/(root)/(tabs)");
+        // refetch();
+    };
     return (
         <ScrollView className='w-full' >
             <View className='pb-2 w-full items-center pt-[60px] flex-row bg-primary-300'>
-                <Pressable onPress={() => router.navigate('..')}>
+                <Pressable onPress={handleBack}>
                     <Image source={icons.leftarrow} className='size-11' tintColor="white" />
                 </Pressable>
                 <Text className='text-2xl font-rubik-bold text-white'>Đăng nhập</Text>
             </View>
             <SafeAreaView className='flex-1 px-4'>
                 <LoginForm />
-                <TouchableOpacity onPress={handleLogin} className="bg-black shadow-md  rounded-xl w-full py-4 mt-5" >
+                <TouchableOpacity className="bg-black shadow-md  rounded-xl w-full py-4 mt-5" >
                     <View className='flex-row items-center justify-center'>
                         <Image source={icons.google} className="w-6 h-6"
                             resizeMode="contain" />

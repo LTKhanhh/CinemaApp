@@ -4,23 +4,25 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Voucher from '../(tabs)/Voucher';
 import icons from '@/constants/icons';
-import { useNavigation } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import ProfileCard from './ProfileCard';
 import LinkItem from './LinkItem';
 // import { logout } from "@/lib/appwrite";
 import { logoutAppwrite } from '@/lib/appwrite';
-import { useGlobalContext } from '@/lib/global-provider';
+import { useAuthContext } from '@/lib/auth-provider';
+import { TokenManager } from '@/lib/http';
 
 const ProfilePage = () => {
     const navigation = useNavigation()
-    const { user, refetch } = useGlobalContext();
+    const router = useRouter()
+    const { user, refetch } = useAuthContext();
     const handleLogout = async () => {
-        console.log(1)
-        const result = await logoutAppwrite();
-        if (result) {
-            Alert.alert("Success", "Logged out successfully");
-            refetch();
-        } else {
+        try {
+            await TokenManager.removeToken(); // chỉ cần đợi xong, không cần check kết quả
+            await refetch(); // gọi lại getCurrentUser, lúc này sẽ fail → user null
+            router.replace("/login"); // replace để tránh quay lại bằng back
+        } catch (error) {
+            console.error("Logout failed:", error);
             Alert.alert("Error", "Failed to logout");
         }
     }
@@ -51,7 +53,7 @@ const ProfilePage = () => {
                 <LinkItem title='Điểm beta' />
                 <LinkItem title='Lịch sử giao dịch' />
                 <LinkItem title='Thông tin tài khoản' />
-                <LinkItem title='Thay đổi mật khẩu' />
+                <LinkItem title='Thay đổi mật khẩu' link='password' />
                 <LinkItem title='Xóa tài khoản' />
 
                 <TouchableOpacity onPress={handleLogout} className='mt-4 w-full pb-10 pl-3'>

@@ -8,10 +8,10 @@ import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { AppDispatch } from "@/redux/actions/authActions";
 import { getCurrentUserAppwrite } from "@/redux/actions/authActions";
-import { useGlobalContext } from "@/lib/global-provider";
+import { useAuthContext } from "@/lib/auth-provider";
 
 export default function AppLayout() {
-    const { loading, isLogged } = useGlobalContext();
+    const { loading, isLogged } = useAuthContext();
     // const { user, isLogged, loading } = useSelector(
     //     (state: RootState) => state.auth
     // );
