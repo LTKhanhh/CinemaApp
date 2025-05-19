@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import TimeCard from '@/components/TimeCard'
 import { ChevronLeft } from 'react-native-feather' // Make sure to install this package
 import { useAuthContext } from '@/lib/auth-provider'
+import { filmInShowTimeCinemaType, showTimeType } from '@/schemaValidations/showTime.schema'
 
 const poster = "https://files.betacorp.vn/media%2fimages%2f2025%2f03%2f31%2f400x633%2D24%2D165808%2D310325%2D29.jpg"
 
@@ -11,7 +12,7 @@ interface TimeCardProps {
     id: string;
 }
 
-const FilmCard: React.FC = () => {
+const FilmCard = ({ film, showTimes }: { film: filmInShowTimeCinemaType, showTimes: showTimeType[] }) => {
     const { isLogged } = useAuthContext()
     const [showLeftChevron, setShowLeftChevron] = useState<boolean>(false)
     const scrollViewRef = useRef<ScrollView | null>(null)
@@ -34,12 +35,12 @@ const FilmCard: React.FC = () => {
             <View className='flex-row'>
                 <Image
                     className='w-[90px] h-[120px] rounded-lg mr-4 -top-3'
-                    source={{ uri: poster }}
+                    source={{ uri: film.posterUrl }}
                 />
                 <View className='py-4'>
-                    <Text className='text-[14px] font-rubik-bold capitalize'>Thám tử kiên: kỳ án không đầu</Text>
-                    <Text className='text-[12px] font-rubik-light'>Kinh dị, trinh thám</Text>
-                    <Text className='text-[12px] font-rubik-light'>131 phút</Text>
+                    <Text className='text-[14px] font-rubik-bold capitalize'>{film.title}</Text>
+                    <Text className='text-[12px] font-rubik-light'>{film.genres.join(", ")}</Text>
+                    <Text className='text-[12px] font-rubik-light'>{film.duration} phút</Text>
                 </View>
             </View>
 
@@ -72,15 +73,11 @@ const FilmCard: React.FC = () => {
                         onScroll={handleScroll}
                         scrollEventThrottle={16}
                     >
-                        <TimeCard isLogged={isLogged} id='1' />
-                        <TimeCard isLogged={isLogged} id='2' />
-                        <TimeCard isLogged={isLogged} id='3' />
-                        <TimeCard isLogged={isLogged} id='4' />
-                        <TimeCard isLogged={isLogged} id='5' />
-                        <TimeCard isLogged={isLogged} id='6' />
-                        <TimeCard isLogged={isLogged} id='7' />
-                        <TimeCard isLogged={isLogged} id='8' />
-                        <TimeCard isLogged={isLogged} id='9' />
+                        {showTimes.map((item, idx) => (
+                            <TimeCard isLogged={isLogged} seats={item.seats} hour={item.hour} minute={item.minute} id={item.id} />
+
+                        ))}
+
                     </ScrollView>
                 </View>
             </View>

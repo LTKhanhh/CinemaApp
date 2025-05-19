@@ -3,8 +3,8 @@ import React, { useEffect, useState } from 'react'
 import CinemaCity from '@/components/CinemaCity'
 import { LinearGradient } from 'expo-linear-gradient'
 import { useNavigation } from 'expo-router'
-import { getAllCinemaType } from '@/schemaValidations/cinema.schema'
 import cinemaApiRequest from '@/apiRequest/cinema'
+import { CinemaListSchemaType } from '@/schemaValidations/cinema.schema'
 const datas = [
     {
         city: "Hà Nội",
@@ -63,7 +63,7 @@ const datas = [
     }
 ]
 const Address = () => {
-    const [cinemas, setCinemas] = useState<getAllCinemaType>({})
+    const [cinemas, setCinemas] = useState<CinemaListSchemaType>({})
     const navigation = useNavigation()
 
     useEffect(() => {
@@ -102,8 +102,8 @@ const Address = () => {
             </View>
 
             <ScrollView className='bg-[#f7f7f7] '>
-                {datas.map((data, idx) => (
-                    <CinemaCity city={data.city} cinemas={data.cinemas} key={idx} />
+                {Object.entries(cinemas).map(([key, value], idx) => (
+                    <CinemaCity city={key} cinemas={value} key={idx} />
                 ))}
                 <View className='mb-32'></View>
             </ScrollView>

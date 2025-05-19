@@ -95,9 +95,16 @@ apiClient.interceptors.response.use(
         // Tránh lặp vô hạn khi refreshToken cũng bị lỗi
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
-
+            console.log("re")
             try {
                 const refreshToken = await TokenManager.getRefreshToken();
+                const accessToken = await TokenManager.getToken();
+                console.log(refreshToken)
+                console.log(accessToken)
+
+                if (!accessToken) {
+                    return
+                }
                 if (!refreshToken) {
                     throw new Error("No refresh token available");
                 }
@@ -108,9 +115,9 @@ apiClient.interceptors.response.use(
                     }
                 });
 
-                const { accessToken, refreshToken: newRefreshToken } = refreshResponse.payload.data;
+                const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.payload.data;
 
-                await TokenManager.setToken(accessToken);
+                await TokenManager.setToken(newAccessToken);
                 await TokenManager.setRefreshToken(newRefreshToken);
 
                 // Gắn token mới vào headers và gửi lại request cũ
@@ -155,6 +162,7 @@ const request = async <Response>(
             payload: response.data,
         };
     } catch (error: any) {
+        console.log(error)
         // Throw the error data directly as in the original code
         throw error.response?.data || new HttpError({
             status: error.response?.status || 500,

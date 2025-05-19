@@ -52,7 +52,7 @@ export default function Index() {
     const getFilms = async () => {
       try {
         const res = await filmApiRequest.getAll(controller)
-        console.log(res)
+        // console.log(res)
         setFilms(res.payload)
       } catch (error) {
         console.log(error)
@@ -120,7 +120,7 @@ export default function Index() {
 
 
         <FlatList
-          data={data}
+          data={films}
           numColumns={3}
           columnWrapperStyle={{
             justifyContent: "flex-start",
@@ -132,7 +132,7 @@ export default function Index() {
           className="mt-2 pb-32 px-[5px]"
           scrollEnabled={false}
           renderItem={({ item }) => (
-            <Card id={item._id.$oid} title={item.title} posterUrl={item.posterUrl} ageRating={item.ageRating} duration={item.duration} />
+            <Card film={item} />
           )}
 
 

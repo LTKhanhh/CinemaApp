@@ -6,8 +6,9 @@ import { useNavigation } from 'expo-router'
 import InfoFilm from './InfoFilm'
 import InfoStep2 from './InfoStep2'
 import PayCard from './PayCard'
+import { seatType } from '@/schemaValidations/seat.schema'
 
-const NextStep = ({ timeRemaining, setStep }: { timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
+const NextStep = ({ seats, price, timeRemaining, setStep }: { seats: seatType[], price: number, timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
     const navigate = useNavigation()
     const [curType, setCurType] = useState("noidia")
     return (
@@ -33,7 +34,7 @@ const NextStep = ({ timeRemaining, setStep }: { timeRemaining: number, setStep: 
             </View>
 
             <ScrollView className='flex-1 p-3 '>
-                <InfoStep2></InfoStep2>
+                <InfoStep2 seats={seats} price={price}></InfoStep2>
 
                 <View className='mt-4'>
                     <Text className='font-rubik text-[26px]'>Phương thức giảm giá</Text>
@@ -41,7 +42,7 @@ const NextStep = ({ timeRemaining, setStep }: { timeRemaining: number, setStep: 
                     <View className='px-6'>
                         <View className='flex-row items-center mb-4'>
                             <Text className='text-xl font-[360] flex-1 '>Tổng tiền</Text>
-                            <Text className='text-red-500 font-rubik-bold text-[22px]'>55,000đ</Text>
+                            <Text className='text-red-500 font-rubik-bold text-[22px]'>{price}đ</Text>
                         </View>
 
                         <View className='flex-row items-center mb-4'>
@@ -51,7 +52,7 @@ const NextStep = ({ timeRemaining, setStep }: { timeRemaining: number, setStep: 
 
                         <View className='flex-row items-center'>
                             <Text className='text-xl font-[360] flex-1 '>Số tiền cần thanh toán</Text>
-                            <Text className='text-red-500 font-rubik-bold text-[22px]'>55,000đ</Text>
+                            <Text className='text-red-500 font-rubik-bold text-[22px]'>{price}đ</Text>
                         </View>
                     </View>
                 </View>

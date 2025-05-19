@@ -5,38 +5,39 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { useRouter } from 'expo-router'
 
 import { data } from '../(tabs)/datatest'
+import { filmInListType } from '@/schemaValidations/film.schema'
 
-interface Film {
-    _id: {
-        $oid: string;
-    };
-    title: string;
-    description: string;
-    releaseDate: string;
-    language: string;
-    director: string;
-    actors: string[];
-    duration: number;
-    genres: string[];
-    ageRating: string;
-    posterUrl: string;
-    bannerUrl: string;
-    trailerUrl: string;
-    status: string;
-}
-const InfoFilm = ({ id }: { id: string }) => {
+// interface Film {
+//     _id: {
+//         $oid: string;
+//     };
+//     title: string;
+//     description: string;
+//     releaseDate: string;
+//     language: string;
+//     director: string;
+//     actors: string[];
+//     duration: number;
+//     genres: string[];
+//     ageRating: string;
+//     posterUrl: string;
+//     bannerUrl: string;
+//     trailerUrl: string;
+//     status: string;
+// }
+const InfoFilm = ({ film }: { film: filmInListType | null }) => {
     const router = useRouter()
 
-    const [film, setFilm] = useState<Film>()
+    // const [film, setFilm] = useState<Film>()
 
-    useEffect(() => {
-        setFilm(data.find(item => item._id.$oid == id))
-    }, [id])
+    // useEffect(() => {
+    //     setFilm(data.find(item => item._id.$oid == id))
+    // }, [id])
     return (
         <View>
             <View className='relative'>
 
-                <Image className='w-full resize h-[160px]' source={{ "uri": film?.bannerUrl }} />
+                <Image className='w-full resize h-[160px]' source={{ "uri": film?.posterUrl }} />
                 <View className='absolute w-full top-[50px] ' style={{
                     // Shadow không được hỗ trợ trực tiếp bằng class tailwind trong nativewind
                     // shadowColor: '#000',
@@ -59,7 +60,7 @@ const InfoFilm = ({ id }: { id: string }) => {
             <View className=' items-center justify-center flex-row -top-12 '
             // style={{ transform: [{ translateX: 0 }], }}
             >
-                <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(filmDetail)/[id]", params: { id: id } })}>
+                <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(filmDetail)/[id]", params: { id: film?.id || "" } })}>
                     <Text className='text-[13px] text-blue-400 border-blue-400 p-1 border rounded-full font-rubik-semibold'>Chi tiết phim</Text>
                 </TouchableOpacity>
             </View>

@@ -1,34 +1,36 @@
-import { z } from "zod";
+import { z } from 'zod'
 
-
-const CinemaAddressSchema = z.object({
-    street: z.string().optional(),
-    ward: z.string().optional(),
-    district: z.string().optional(),
+// Định nghĩa schema cho địa chỉ
+const AddressSchema = z.object({
+    street: z.string(),
+    ward: z.string(),
+    district: z.string(),
     city: z.string(),
-    full: z.string().optional()
-});
+    full: z.string(),
+})
 
-const CinemaLocationSchema = z.object({
+export type AddressSchemaType = z.TypeOf<typeof AddressSchema>
+
+// Định nghĩa schema cho tọa độ địa lý
+const LocationSchema = z.object({
     type: z.literal("Point"),
-    coordinates: z.tuple([z.number(), z.number()]) // [longitude, latitude]
-});
-// 1. Định nghĩa schema cho Cinema
+    coordinates: z.tuple([z.number(), z.number()]), // [longitude, latitude]
+})
+
+export type LocationSchema = z.TypeOf<typeof LocationSchema>
+
+// Schema cho một cụm rạp
 const CinemaSchema = z.object({
-    _id: z.string(),
+    address: AddressSchema,
+    location: LocationSchema,
     name: z.string(),
-    address: CinemaAddressSchema,
-    phone: z.string().regex(/^\d{9,11}$/),
-    location: CinemaLocationSchema.optional(),
-    avatar: z.string().optional(),
-    createdAt: z.string().datetime(),
-    updatedAt: z.string().datetime()
-});
+    phone: z.string(),
+    id: z.string(),
+})
 
+export type CinemaSchemaType = z.TypeOf<typeof CinemaSchema>
 
-// 2. Định nghĩa schema cho kết quả trả về
-export const getAllCinema = z.record(z.string(), z.array(CinemaSchema));
+// Schema tổng thể: Record<ProvinceName, Cinema[]>
+const CinemaListSchema = z.record(z.string(), z.array(CinemaSchema))
 
-export type getAllCinemaType = z.TypeOf<typeof getAllCinema>
-
-export type getOneCinemaType = z.TypeOf<typeof CinemaSchema>
+export type CinemaListSchemaType = z.TypeOf<typeof CinemaListSchema>

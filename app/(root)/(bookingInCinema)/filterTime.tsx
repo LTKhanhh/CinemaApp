@@ -25,7 +25,7 @@ const TimeItem: React.FC<TimeItemProps> = ({ date, day, isSelected, onPress }) =
     );
 };
 
-const FilterTime: React.FC = () => {
+const FilterTime = ({ setPage }: { setPage: React.Dispatch<React.SetStateAction<number>> }) => {
     // Get current date
     const today = new Date();
 
@@ -55,9 +55,14 @@ const FilterTime: React.FC = () => {
         const dayOfWeek = date.getDay() + 1; // 1 = Sunday, 2 = Monday, etc.
         const dayStr = date.getDate().toString().padStart(2, '0');
 
-        return `${dayStr}-Th${dayOfWeek}`;
+        return `${dayStr}- ${dayOfWeek == 1 ? "CN" : `Th${dayOfWeek}`} `;
     };
 
+    const handlePress = (dateStr: string, idx: number) => {
+        setSelectedDay(dateStr)
+
+        setPage(idx)
+    }
     return (
         <View className='flex-row mx-8 my-4'>
             {days.map((day, index) => {
@@ -70,7 +75,7 @@ const FilterTime: React.FC = () => {
                         date={dateStr}
                         day={dayLabel}
                         isSelected={selectedDay === dateStr}
-                        onPress={() => setSelectedDay(dateStr)}
+                        onPress={() => handlePress(dateStr, index)}
                     />
                 );
             })}

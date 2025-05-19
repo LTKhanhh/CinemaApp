@@ -2,17 +2,10 @@ import { View, Text, Image, FlatList, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import icons from '@/constants/icons'
 import CinemaCard from './CinemaCard'
+import { CinemaSchemaType } from '@/schemaValidations/cinema.schema'
 
-interface cinema {
-    name: string,
-    distance: string
-}
 
-interface cityListCinema {
-    city: string,
-    cinemas: cinema[]
-}
-const CinemaCity = ({ city, cinemas }: cityListCinema) => {
+const CinemaCity = ({ city, cinemas }: { city: string, cinemas: CinemaSchemaType[] }) => {
     const [show, setShow] = useState(false)
     return (
         <View className='px-4'>
@@ -35,7 +28,7 @@ const CinemaCity = ({ city, cinemas }: cityListCinema) => {
                 <FlatList
                     data={cinemas}
                     renderItem={({ item }) => (
-                        <CinemaCard id='1' name={item.name} distance={item.distance}
+                        <CinemaCard id={item.id} name={item.name} distance={"100"}
                         />
                     )}
                     // keyExtractor={(item) => item.toString()}

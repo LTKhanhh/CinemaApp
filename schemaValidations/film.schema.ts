@@ -26,8 +26,12 @@ const filmInList = z.object({
     title: z.string(),
     ageRating: z.string(),
     posterUrl: z.string(),
-    releaseDate: z.string()
+    releaseDate: z.string(),
+    genres: z.array(z.string()).default([]),
+    duration: z.number(),
 })
+
+export type filmInListType = z.TypeOf<typeof filmInList>
 
 export const getAllFilmRes = z.array(
     filmInList

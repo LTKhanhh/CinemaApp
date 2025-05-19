@@ -5,12 +5,57 @@ import { useLocalSearchParams } from "expo-router";
 import icons from '@/constants/icons';
 import FilterTime from './filterTime';
 import FilmCard from './FilmCard';
+import { useCallback, useEffect, useState } from 'react';
+import { getShowTimeByCinemaType, showTimeType } from '@/schemaValidations/showTime.schema';
+import showtimeApiRequest from '@/apiRequest/showtime';
 
 const Page = () => {
     const navigation = useNavigation()
     const { cinemaId } = useLocalSearchParams<{ cinemaId: string }>();
+    const [page, setPage] = useState(0)
+    const [films, setFilms] = useState<getShowTimeByCinemaType>()
+    const [isLoading, setIsLoading] = useState(false)
+    const fetchData = useCallback(
+        async (abortController?: AbortController): Promise<void> => {
+            setIsLoading(true);
 
+            try {
+                const controller = abortController || new AbortController();
+                const res = await showtimeApiRequest.getByCinema(cinemaId, page, controller);
 
+                setFilms(res.payload);
+                // console.log(showTime)
+            } catch (error) {
+                // console.error("Error fetching job data:", error)
+                // setError("Không thể tải dữ liệu công việc. Vui lòng thử lại sau.")
+            } finally {
+                setIsLoading(false);
+            }
+        },
+        [cinemaId, page]
+    );
+
+    const refetchData = (): void => {
+        fetchData();
+    };
+    useEffect(() => {
+        const controller = new AbortController();
+
+        // const fetch = async () => {
+        //     try {
+        //         const res = await showtimeApiRequest.getByFilm(id, page, controller)
+
+        //         console.log(res)
+        //     } catch (error) {
+        //         console.log("lỗi booking")
+        //         console.log(error)
+        //     }
+        // }
+        // fetch()
+        fetchData(controller)
+
+        return () => controller.abort();
+    }, []);
     return (
         <View className='flex-1'>
             <View className='h-[100px]'>
@@ -39,12 +84,27 @@ const Page = () => {
                     <Text className='font-rubik-semibold text-[18px]  text-center'>Nemui Thanh Xuân</Text>
                 </View>
 
-                <FilterTime />
+                <FilterTime setPage={setPage} />
 
-                <View className='px-3'>
-                    <FilmCard />
+                {films &&
+                    Object.entries(films)
+                        .filter(([key]) => key !== "films")
+                        .map(([filmId, showTimes], idx) => {
+                            const film = films.films[filmId];
+                            if (!film) return null; // tránh lỗi nếu filmId không có trong films
 
-                </View>
+                            return (
+                                <View className='px-3'>
+
+                                    <FilmCard
+                                        key={idx}
+                                        film={film}
+                                        showTimes={showTimes as showTimeType[]}
+                                    />
+                                </View>
+
+                            );
+                        })}
             </ScrollView>
         </View>
     )
