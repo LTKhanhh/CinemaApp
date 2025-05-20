@@ -33,7 +33,7 @@ export type BookingParams = {
 
 const SecondBookingPage = () => {
     const { isLogged } = useAuthContext();
-    const { movie, id } = useBookingParams();
+    const { id, movie } = useBookingParams();
     const navigation = useNavigation<any>();
     const [timeRemaining, setTimeRemaining] = useState<number>(600); // 10 phút tính bằng giây
     const [selectedChairs, setSelectedChairs] = useState<seatType[]>([]); // Mảng lưu ghế đã chọn

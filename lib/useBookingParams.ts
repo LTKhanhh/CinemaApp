@@ -3,7 +3,7 @@ import { filmInListType } from "@/schemaValidations/film.schema";
 
 export type BookingParams = {
     movie: string; // JSON string của FilmInListType
-    showtimeId: string;
+    id: string;
 };
 
 // hooks/useBookingParams.ts
@@ -22,7 +22,7 @@ export const useBookingParams = (): { movie: filmInListType | null; id: string }
         }
     }, [params.movie]);
 
-    const id = params.showtimeId ?? "";
+    const id = params.id ?? "";
 
     return { movie, id };
 };

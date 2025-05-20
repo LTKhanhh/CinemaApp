@@ -15,7 +15,7 @@ export const Card = ({ onPress, film }: Props) => {
     const router = useRouter();
 
     return (
-        <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(booking)/[id]", params: { film: JSON.stringify(film) } })} className="w-[32%]  relative ">
+        <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(booking)/[id]", params: { id: film.id, film: JSON.stringify(film) } })} className="w-[32%]  relative ">
             <View
                 className={`${film.ageRating == "P" && "bg-green-500"} px-3 py-1 rounded-lg absolute top-1 left-2 z-50 ${film.ageRating == "C16" && "bg-yellow-400"} ${film.ageRating == "C18" && "bg-red-400"}`}>
                 <Text className="text-white font-rubik-semibold">{film.ageRating}</Text>

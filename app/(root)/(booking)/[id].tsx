@@ -24,7 +24,7 @@ const BookingPage = () => {
             return null;
         }
     }, [params.film]);
-    console.log(movie)
+    // console.log(movie)
     const [showTime, setShowTime] = useState<getShowTimeByFilmType>({})
     const [page, setPage] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
@@ -47,7 +47,6 @@ const BookingPage = () => {
         },
         [movie, page]
     );
-
     const refetchData = (): void => {
         fetchData();
     };

@@ -10,7 +10,6 @@ import { filmInListType } from '@/schemaValidations/film.schema'
 const AddressCard = ({ name, list, film }: { name: string, list: showTimeType[], film: filmInListType | null }) => {
     const { isLogged } = useAuthContext()
     const [more, setMore] = useState(true)
-    console.log(more)
     const router = useRouter()
     return (
         <View className='px-3'>
