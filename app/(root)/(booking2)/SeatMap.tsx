@@ -43,6 +43,20 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, selectedSeats, onSelect }) => 
                             );
                             if (!nextSeat) return null;
 
+                            if (seat.status !== "none") return (
+                                <Pressable
+                                    key={seat.name}
+                                    style={{ marginRight: 4 }}
+                                >
+                                    <Chair
+                                        name={`${seat.name}-${nextSeat.name}`}
+                                        type={icons.chair2}
+                                        double={true}
+                                        status={seat.status}
+
+                                    />
+                                </Pressable>
+                            );
                             const seatPair = [seat, nextSeat];
                             const isSelected = seatPair.every(s => selectedSeats.some(sel => sel.name === s.name));
 
@@ -55,7 +69,7 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, selectedSeats, onSelect }) => 
                                     <Chair
                                         name={`${seat.name}-${nextSeat.name}`}
                                         type={icons.chair2}
-                                        tintColor={isSelected ? 'violet' : '#ccc'}
+                                        isSelected={isSelected}
                                         double={true}
                                     />
                                 </Pressable>
@@ -63,6 +77,20 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, selectedSeats, onSelect }) => 
                         }
 
                         const icon = seat.type === 'vip' ? icons.chair : icons.chair3;
+
+                        if (seat.status !== "none") return (
+                            <Pressable
+                                key={seat.name}
+                                style={{ marginRight: 4 }}
+                            >
+                                <Chair
+                                    name={seat.name}
+                                    type={icon}
+                                    status={seat.status}
+                                />
+                            </Pressable>
+                        );
+
                         const isSelected = selectedSeats.some(sel => sel.name === seat.name);
 
                         return (
@@ -74,7 +102,8 @@ const SeatMap: React.FC<SeatMapProps> = ({ seats, selectedSeats, onSelect }) => 
                                 <Chair
                                     name={seat.name}
                                     type={icon}
-                                    tintColor={isSelected ? 'violet' : '#ccc'}
+                                    isSelected={isSelected}
+
                                 />
                             </Pressable>
                         );

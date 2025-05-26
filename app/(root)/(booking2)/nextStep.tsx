@@ -1,16 +1,33 @@
-import { View, Text, Pressable, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, Pressable, Image, ScrollView, TouchableOpacity, Alert } from 'react-native'
 import React, { useState } from 'react'
 import { LinearGradient } from 'expo-linear-gradient'
 import icons from '@/constants/icons'
-import { useNavigation } from 'expo-router'
+import { useNavigation, useRouter } from 'expo-router'
 import InfoFilm from './InfoFilm'
 import InfoStep2 from './InfoStep2'
 import PayCard from './PayCard'
 import { seatType } from '@/schemaValidations/seat.schema'
+import bookingApiRequest from '@/apiRequest/booking'
 
-const NextStep = ({ seats, price, timeRemaining, setStep }: { seats: seatType[], price: number, timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
+const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, seats: seatType[], price: number, timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
     const navigate = useNavigation()
+    const router = useRouter()
     const [curType, setCurType] = useState("noidia")
+
+    const handleBooking = async () => {
+        const body = {
+            showtimeId: id,
+            seats: seats,
+            totalPay: price.toString(),
+        }
+        try {
+            await bookingApiRequest.post(body)
+
+
+        } catch (error) {
+            Alert.alert("Lỗi", "Có lỗi xảy ra, xin thử lại.");
+        }
+    }
     return (
         <View className='flex-1'>
             <View className='h-[100px]'>

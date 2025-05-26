@@ -234,8 +234,51 @@ const SecondBookingPage = () => {
                         <InfoFilm id={id} />
 
                         <View className='px-3 py-4 border-b flex-row justify-between pr-5'>
-                            {/* Ghế legend và loại ghế */}
+                            <View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế trống</Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#3D90D7"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đang <Text>được giữ</Text></Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#205781"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đang chọn</Text>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"red"} source={icons.chair} />
+                                    <Text className='ml-2'>Ghế đã bán</Text>
+                                </View>
+                            </View>
+
+                            <View className='justify-between items-end pr-8'>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair3} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế thường</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế Vip</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                                <View className='flex-row mb-4 items-center'>
+                                    <Image resizeMode='cover' className='h-8 w-16' tintColor={"#ccc"} source={icons.chair2} />
+                                    <View className='ml-2'>
+                                        <Text className=' font-semibold'>Ghế đôi</Text>
+                                        <Text className='font-bold text-[13px]'>85.000đ</Text>
+                                    </View>
+                                </View>
+                            </View>
                         </View>
+
+
 
                         <View className='px-6 py-4'>
                             <Text className='text-lg text-center text-[#666]'>Màn hình chiếu</Text>
@@ -258,7 +301,7 @@ const SecondBookingPage = () => {
             )}
 
             {step == 2 && (
-                <NextStep seats={selectedChairs} price={totalPrice} setStep={setStep} timeRemaining={timeRemaining} />
+                <NextStep id={id} seats={selectedChairs} price={totalPrice} setStep={setStep} timeRemaining={timeRemaining} />
             )}
 
 
