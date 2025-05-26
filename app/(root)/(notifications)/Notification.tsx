@@ -2,7 +2,7 @@ import { View, Text, Image, Pressable } from 'react-native'
 import React from 'react'
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Voucher from '../(tabs)/Voucher';
+import Voucher from '../(tabs)/Conversation';
 import icons from '@/constants/icons';
 import { useNavigation } from 'expo-router';
 const index = () => {

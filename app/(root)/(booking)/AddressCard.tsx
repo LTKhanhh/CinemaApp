@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import icons from '@/constants/icons'
-import Voucher from '../(tabs)/Voucher'
+import Voucher from '../(tabs)/Conversation'
 import { useRouter } from 'expo-router'
 import { useAuthContext } from '@/lib/auth-provider'
 import { showTimeType } from '@/schemaValidations/showTime.schema'

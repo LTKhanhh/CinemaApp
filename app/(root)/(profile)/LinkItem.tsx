@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import React from 'react'
 import icons from '@/constants/icons'
-import Voucher from '../(tabs)/Voucher'
+import Voucher from '../(tabs)/Conversation'
 import { useNavigation, useRouter } from 'expo-router'
 // import { Link } from 'expo-router'
 const LinkItem = ({ title, link }: { title: string, link?: string }) => {

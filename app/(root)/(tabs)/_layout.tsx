@@ -52,11 +52,11 @@ const TabsLayout = () => {
                     <TabIcon focused={focused.focused} icon={icons.location} title='Address' />
                 ),
             }} />
-            <Tabs.Screen name='Voucher' options={{
-                title: 'Voucher',
+            <Tabs.Screen name='Conversation' options={{
+                title: 'Conversation',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.voucher} title='Voucher' />
+                    <TabIcon focused={focused.focused} icon={icons.email} title='Conversation' />
                 ),
             }} />
             <Tabs.Screen name='Promotion' options={{

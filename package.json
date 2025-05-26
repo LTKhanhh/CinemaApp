@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
+    "@fortawesome/react-native-fontawesome": "github:fortawesome/react-native-fontawesome",
     "@react-native-async-storage/async-storage": "1.23.1",
     "@react-native-community/datetimepicker": "^8.3.0",
     "@react-navigation/bottom-tabs": "^7.2.0",
@@ -47,6 +48,7 @@
     "react-native-appwrite": "^0.7.0",
     "react-native-date-picker": "^5.0.12",
     "react-native-feather": "^1.1.2",
+    "react-native-fontawesome": "^7.0.0",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-paper": "^5.13.1",
