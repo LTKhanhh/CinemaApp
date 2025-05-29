@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import icons from '@/constants/icons'
 import InputCard from './InputCard'
 import authApiRequest from '@/apiRequest/auth'
-import { TokenManager } from '@/lib/http'
+import { TokenManager } from '@/lib/http1'
 import { useAuthContext } from '@/lib/auth-provider'
 
 const LoginForm = () => {

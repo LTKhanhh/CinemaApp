@@ -48,7 +48,7 @@ export default function Index() {
 
   useEffect(() => {
     const controller = new AbortController()
-
+    console.log("home")
     const getFilms = async () => {
       try {
         const res = await filmApiRequest.getAll(controller)
@@ -138,8 +138,6 @@ export default function Index() {
 
         />
       </ScrollView>
-
-
     </ SafeAreaView>
   );
 }

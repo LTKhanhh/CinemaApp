@@ -5,26 +5,20 @@ import icons from '@/constants/icons'
 import LoginForm from '@/components/LoginForm'
 import { TouchableOpacity } from 'react-native'
 import { Link, useNavigation, Redirect, useRouter } from 'expo-router'
-import { useDispatch } from 'react-redux'
-import { AppDispatch, getCurrentUserAppwrite } from '@/redux/actions/authActions'
-import { RootState } from "@/redux/actions/authActions";
-import { useSelector } from "react-redux";
-import { useEffect } from 'react'
-import { useGlobalContext } from '@/lib/global-provider'
-import { loginAppwrite } from '@/lib/appwrite'
+
 import { useAuthContext } from '@/lib/auth-provider'
 const login = () => {
     const router = useRouter();
     const { refetch, loading, isLogged } = useAuthContext();
 
     if (!loading && isLogged) {
-        return <Redirect href="/" />;
+        return <Redirect href="/(root)/(tabs)" />;
     }
 
     const handleBack = async () => {
         router.push("/(root)/(tabs)");
-        // refetch();
     };
+
     return (
         <ScrollView className='w-full' >
             <View className='pb-2 w-full items-center pt-[60px] flex-row bg-primary-300'>

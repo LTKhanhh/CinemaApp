@@ -1,4 +1,4 @@
-import http from "@/lib/http"
+import http from "@/lib/http1"
 import { CinemaListSchemaType } from "@/schemaValidations/cinema.schema"
 // import { getAllCinemaType, getOneCinemaType } from "@/schemaValidations/cinema.schema"
 

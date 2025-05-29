@@ -1,4 +1,4 @@
-import http from "@/lib/http"
+import http from "@/lib/http1"
 import { getAllFilmResType, getOneFilmResType } from "@/schemaValidations/film.schema"
 
 

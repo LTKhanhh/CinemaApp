@@ -60,7 +60,7 @@ const FilterTime = ({ setPage }: { setPage: React.Dispatch<React.SetStateAction<
 
     const handlePress = (dateStr: string, idx: number) => {
         setSelectedDay(dateStr)
-
+        console.log(idx)
         setPage(idx)
     }
     return (

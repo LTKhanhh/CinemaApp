@@ -1,5 +1,9 @@
+import chatApiRequest from "@/apiRequest/chat";
+import { connectSocketChat, getSocketChat } from "@/lib/socketChat";
+import { messageSchemaType, messagesSchemaType } from "@/schemaValidations/chat.schema";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
+    ActivityIndicator,
     FlatList,
     Image,
     Text,
@@ -42,7 +46,7 @@ interface MessageBubbleFriendProps {
 
 interface MessageBubbleProps {
     index: number;
-    message: Message;
+    message: messageSchemaType;
 }
 
 interface MessageInputProps {
@@ -190,7 +194,7 @@ function MessageBubble({ message, index }: MessageBubbleProps): JSX.Element | nu
         return null;
     }
 
-    return message.is_me ? (
+    return message.sender == "user" ? (
         <MessageBubbleMe text={message.text} />
     ) : (
         <MessageBubbleFriend text={message.text} />
@@ -239,55 +243,102 @@ export function MessageInput({ message = '', setMessage, onSend }: MessageInputP
     )
 }
 
-function MessagesScreen(): JSX.Element {
+function MessagesScreen({ messagesList, conversationId }: { messagesList: messageSchemaType[], conversationId: string }): JSX.Element {
+    const [messages, setMessages] = useState<messageSchemaType[]>(messagesList)
+    const [offset, setOffset] = useState(messagesList.length)
+    const [isLoadingMore, setIsLoadingMore] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
     const [message, setMessage] = useState<string>('')
 
-    function onSend() {
+    const fetchOlderMessages = async () => {
+        if (isLoadingMore || !hasMore) return;
+
+        setIsLoadingMore(true)
+        try {
+            const res = await chatApiRequest.get(offset.toString())
+            const data = res.payload
+            const newMessages = Object.entries(data)
+                .filter(([key]) => key !== "conversationId")
+                .map(([_, value]) => value as messageSchemaType); // Ép kiểu nếu đã có định nghĩa
+
+
+            if (newMessages.length === 0) {
+                setHasMore(false)
+            } else {
+                setMessages(prev => [...prev, ...newMessages])
+                setOffset(prev => prev + newMessages.length)
+            }
+        } catch (error) {
+            console.error("Lỗi tải thêm:", error)
+        }
+        setIsLoadingMore(false)
+    }
+
+    async function onSend() {
         const cleaned = message.replace(/\s+/g, ' ').trim()
         if (cleaned.length === 0) return
+        try {
+            await chatApiRequest.send({ text: message, conversationId })
+        } catch (error) {
 
-        // Add new message to the list
-        const newMessage: Message = {
-            id: Date.now(),
-            is_me: true,
-            text: cleaned
         }
-        setMessagesList(prev => [newMessage, ...prev])
         setMessage('')
     }
 
-    const [messagesList, setMessagesList] = useState<Message[]>([
-        { id: 1, is_me: true, text: "Hello there!" },
-        { id: 2, is_me: false, text: "Hi! How are you?" },
-        { id: 3, is_me: true, text: "I'm doing great, thanks!" },
-        { id: 4, is_me: false, text: "That's wonderful to hear!" },
-        { id: 5, is_me: true, text: "How about you?" },
-        { id: 6, is_me: true, text: "What have you been up to lately?" },
-        { id: 7, is_me: false, text: "Just working on some projects" },
-        { id: 8, is_me: true, text: "Sounds interesting!" },
-        { id: 9, is_me: false, text: "Yes, it's quite exciting" },
-        { id: 10, is_me: true, text: "Tell me more about it" },
-        { id: 11, is_me: true, text: "I'm really curious" },
-        { id: 12, is_me: false, text: "Well, it's a React Native app" },
-        { id: 13, is_me: true, text: "That's awesome!" },
-        { id: 14, is_me: false, text: "Thanks! It's been fun to build" },
-        { id: 15, is_me: true, text: "I bet it has!" },
-    ])
+    useEffect(() => {
+        let socket: any;
+
+        const initSocket = () => {
+            socket = connectSocketChat(conversationId, "");
+            const handleNewMessage = (data: messageSchemaType) => {
+                console.log(1)
+                setMessages(prev => [data, ...prev]);
+            };
+            socket.on('connect', () => {
+                console.log('🟢 Socket connected:', socket?.id);
+                socket.on("newMessage", handleNewMessage);
+                socket?.emit('join', { conversationId });
+            });
+
+        };
+
+        initSocket();
+
+        return () => {
+            if (socket?.connected) {
+                socket.off("newMessage"); // 💡 Xoá listener cũ
+                socket.disconnect();
+            }
+        };
+    }, [conversationId]);
+
+    // useEffect(() => {
+    //     const socket = getSocketChat()
+
+    //     return () => {
+    //         const socket = getSocketChat();
+    //         if (socket?.connected) {
+    //             console.log("👋 Cleanup: disconnecting socket");
+    //             // socket.emit("disconnect");
+    //             socket.off("newMessage", handleNewMessage);
+    //         }
+    //     };
+    // }, [conversationId])
 
     function onType(value: string) {
         setMessage(value)
     }
 
-    const renderItem = ({ item, index }: { item: Message | { id: number }; index: number }): JSX.Element | null => {
+    const renderItem = ({ item, index }: { item: messageSchemaType | { id: number }; index: number }): JSX.Element | null => {
         return (
             <MessageBubble
                 index={index}
-                message={item as Message}
+                message={item as messageSchemaType}
             />
         )
     }
 
-    const keyExtractor = (item: Message | { id: number }): string => {
+    const keyExtractor = (item: messageSchemaType | { id: number }): string => {
         return item.id.toString()
     }
 
@@ -300,11 +351,20 @@ function MessagesScreen(): JSX.Element {
                         paddingTop: 10,
                         paddingBottom: 10
                     }}
-                    data={[{ id: -1 }, ...messagesList]}
+                    data={[{ id: -1 }, ...messages]}
                     inverted={true}
                     keyExtractor={keyExtractor}
                     renderItem={renderItem}
                     showsVerticalScrollIndicator={false}
+                    onEndReached={fetchOlderMessages}
+                    onEndReachedThreshold={0.1}
+                    ListFooterComponent={
+                        isLoadingMore ? (
+                            <View style={{ padding: 10, alignItems: 'center' }}>
+                                <ActivityIndicator size="small" color="#666" />
+                            </View>
+                        ) : null
+                    }
                 />
             </View>
 

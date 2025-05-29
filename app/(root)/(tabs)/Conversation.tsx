@@ -1,8 +1,10 @@
-import { View, Text, SafeAreaView, Image, TouchableOpacity, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, SafeAreaView, Image, TouchableOpacity, Pressable, ActivityIndicator } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import icons from '@/constants/icons'
 import { Link, useNavigation } from 'expo-router'
 import MessagesScreen, { MessageHeader, MessageInput } from '@/components/Message'
+import { messageSchemaType } from '@/schemaValidations/chat.schema'
+import chatApiRequest from '@/apiRequest/chat'
 
 const data = [
     {
@@ -22,6 +24,32 @@ const data = [
 
 const Conversation = () => {
     const navigate = useNavigation()
+
+    const [messagesList, setMessagesList] = useState<messageSchemaType[]>([])
+    const [conversationId, setConversationId] = useState("")
+    const [loading, setLoading] = useState(false)
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true)
+
+            try {
+                const res = await chatApiRequest.get("0")
+                const data = res.payload
+                setConversationId(data.conversationId);
+
+                // Lọc ra các tin nhắn (bỏ qua key 'conversationId')
+                const messages = Object.entries(data)
+                    .filter(([key]) => key !== "conversationId")
+                    .map(([_, value]) => value as messageSchemaType); // Ép kiểu nếu đã có định nghĩa
+
+                setMessagesList(messages);
+            } catch (error) {
+
+            }
+            setLoading(false)
+        }
+        fetchData()
+    }, [])
     return (
         <SafeAreaView className='h-full bg-white '>
             {/* <View className="px-4 pt-4 pb-4 flex w-full border-b bg-white border-[#999] flex-row items-center justify-between">
@@ -34,8 +62,14 @@ const Conversation = () => {
             </View>
 
             <View className=' flex-1  mb-[70px] '>
-                <MessagesScreen />
+                <MessagesScreen conversationId={conversationId} messagesList={messagesList} />
             </View>
+
+            {loading && (
+                <View className="absolute inset-0 bg-gray-500/50 justify-center items-center z-50">
+                    <ActivityIndicator size="large" color="#fff" />
+                </View>
+            )}
         </SafeAreaView>
     )
 }

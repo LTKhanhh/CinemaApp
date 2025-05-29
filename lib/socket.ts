@@ -2,7 +2,7 @@
 import { seatType } from '@/schemaValidations/seat.schema';
 import { io, Socket } from 'socket.io-client';
 
-const SOCKET_URL = 'http://10.0.2.2'; // ví dụ: http://192.168.1.10:3000
+const SOCKET_URL = 'http://10.0.2.2:3011'; // ví dụ: http://192.168.1.10:3000
 
 
 let socket: Socket | null = null;
@@ -19,6 +19,10 @@ export const connectSocket = (accessToken: string, showtimeId: string): Socket =
     socket.on('connect', () => {
         console.log('🟢 Socket connected:', socket?.id);
         socket?.emit('join', { accessToken, showtimeId });
+    });
+
+    socket.on("connect_error", (err) => {
+        console.error("❌ Socket connect error:", err.message);
     });
 
     socket.on('unauthorized', () => {

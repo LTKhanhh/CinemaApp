@@ -1,4 +1,4 @@
-import http from "@/lib/http";
+import http from "@/lib/http1";
 import { loginBodyResType, loginBodyType, registerBodyType } from "@/schemaValidations/auth.schema";
 import { getPorfileType } from "@/schemaValidations/user.schema";
 

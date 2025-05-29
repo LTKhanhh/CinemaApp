@@ -10,7 +10,7 @@ import LinkItem from './LinkItem';
 // import { logout } from "@/lib/appwrite";
 import { logoutAppwrite } from '@/lib/appwrite';
 import { useAuthContext } from '@/lib/auth-provider';
-import { TokenManager } from '@/lib/http';
+import { TokenManager } from '@/lib/http1';
 
 const ProfilePage = () => {
     const navigation = useNavigation()

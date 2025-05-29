@@ -2,7 +2,7 @@ import React, { createContext, useContext, ReactNode, useState, useEffect } from
 import { useAuth } from "./useAuth";
 import userApiRequest from "@/apiRequest/user";
 import { getPorfileType } from "@/schemaValidations/user.schema";
-import { TokenManager } from "./http";
+import { TokenManager } from "./http1";
 
 interface AuthContextType {
     isLogged: boolean;

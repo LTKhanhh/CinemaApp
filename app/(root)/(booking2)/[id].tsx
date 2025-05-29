@@ -13,7 +13,7 @@ import { seatType } from '@/schemaValidations/seat.schema';
 import seatApiRequest from '@/apiRequest/seat';
 import SeatMap from './SeatMap';
 import { connectSocket, getSocket } from '@/lib/socket';
-import { TokenManager } from '@/lib/http';
+import { TokenManager } from '@/lib/http1';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Notifications from 'expo-notifications';
 import { useBookingParams } from '@/lib/useBookingParams';
@@ -73,15 +73,32 @@ const SecondBookingPage = () => {
                 console.warn('❌ No access token found in storage.');
                 return;
             }
+            console.log("token" + token)
+            console.log("id" + id)
+
             const socket = connectSocket(token, id || "");
             return () => socket.disconnect();
         };
         initSocket();
+
+
+        return () => {
+            const socket = getSocket();
+            if (socket?.connected) {
+                console.log("👋 Cleanup: disconnecting socket");
+                // socket.emit("disconnect");
+                socket.disconnect();
+            }
+        };
     }, [id]);
+
+
 
     const handlePick = (seat: seatType) => {
         const socket = getSocket();
-        if (socket?.connected) socket.emit('pick', seat);
+        if (socket?.connected) {
+            socket.emit('pick', seat);
+        }
     };
 
     const handleUnPick = (seat: seatType) => {
@@ -195,15 +212,6 @@ const SecondBookingPage = () => {
         }
     };
 
-    // if (loading) {
-    //     return (
-    //         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    //             <SafeAreaView className="h-full flex justify-center items-center">
-    //                 <ActivityIndicator className="text-primary-300" size="large" />
-    //             </SafeAreaView>
-    //         </TouchableWithoutFeedback>
-    //     );
-    // }
 
     return (
         <View className='flex-1'>

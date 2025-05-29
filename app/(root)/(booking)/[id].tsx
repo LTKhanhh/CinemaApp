@@ -31,15 +31,12 @@ const BookingPage = () => {
     const fetchData = useCallback(
         async (abortController?: AbortController): Promise<void> => {
             setIsLoading(true);
-
             try {
                 const controller = abortController || new AbortController();
                 const res = await showtimeApiRequest.getByFilm(movie?.id || "", page, controller);
-
                 setShowTime(res.payload);
                 // console.log(showTime)
             } catch (error) {
-                // console.error("Error fetching job data:", error)
                 // setError("Không thể tải dữ liệu công việc. Vui lòng thử lại sau.")
             } finally {
                 setIsLoading(false);
@@ -56,7 +53,7 @@ const BookingPage = () => {
         fetchData(controller)
 
         return () => controller.abort();
-    }, []);
+    }, [page]);
 
     // if (isLoading) {
     //     return (

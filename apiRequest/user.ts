@@ -1,4 +1,4 @@
-import http from "@/lib/http";
+import http from "@/lib/http1";
 import { getPorfileType } from "@/schemaValidations/user.schema";
 
 const userApiRequest = {
