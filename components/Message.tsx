@@ -1,6 +1,7 @@
 import chatApiRequest from "@/apiRequest/chat";
 import { connectSocketChat, getSocketChat } from "@/lib/socketChat";
 import { messageSchemaType, messagesSchemaType } from "@/schemaValidations/chat.schema";
+import { useRouter } from "expo-router";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import {
     ActivityIndicator,
@@ -11,7 +12,7 @@ import {
     TouchableOpacity,
     View
 } from "react-native"
-import { Send } from "react-native-feather";
+import { ChevronLeft, ChevronsLeft, Send } from "react-native-feather";
 
 // Type definitions
 interface Friend {
@@ -80,6 +81,7 @@ function Thumbnail({ url, size }: { url: string, size: number }) {
 }
 
 export function MessageHeader({ name, avatar }: { name: string, avatar: string }): JSX.Element {
+    const router = useRouter()
     return (
         <View
             style={{
@@ -89,6 +91,7 @@ export function MessageHeader({ name, avatar }: { name: string, avatar: string }
                 paddingVertical: 10
             }}
         >
+            <ChevronLeft color={"#666"} onPress={() => router.push("/(root)/(tabs)/Conversation")} />
             <Image
                 source={{ uri: avatar }}
                 style={{
@@ -97,6 +100,7 @@ export function MessageHeader({ name, avatar }: { name: string, avatar: string }
                     borderRadius: 15,
                     backgroundColor: '#e0e0e0'
                 }}
+                className="ml-2"
             />
             <Text
                 style={{
@@ -278,7 +282,7 @@ function MessagesScreen({ messagesList, conversationId }: { messagesList: messag
         const cleaned = message.replace(/\s+/g, ' ').trim()
         if (cleaned.length === 0) return
         try {
-            await chatApiRequest.send({ text: message, conversationId })
+            await chatApiRequest.send({ text: message, conversationId: conversationId })
         } catch (error) {
 
         }
@@ -291,13 +295,12 @@ function MessagesScreen({ messagesList, conversationId }: { messagesList: messag
         const initSocket = () => {
             socket = connectSocketChat(conversationId, "");
             const handleNewMessage = (data: messageSchemaType) => {
-                console.log(1)
                 setMessages(prev => [data, ...prev]);
             };
             socket.on('connect', () => {
                 console.log('🟢 Socket connected:', socket?.id);
                 socket.on("newMessage", handleNewMessage);
-                socket?.emit('join', { conversationId });
+                socket?.emit('join', conversationId);
             });
 
         };
@@ -311,19 +314,6 @@ function MessagesScreen({ messagesList, conversationId }: { messagesList: messag
             }
         };
     }, [conversationId]);
-
-    // useEffect(() => {
-    //     const socket = getSocketChat()
-
-    //     return () => {
-    //         const socket = getSocketChat();
-    //         if (socket?.connected) {
-    //             console.log("👋 Cleanup: disconnecting socket");
-    //             // socket.emit("disconnect");
-    //             socket.off("newMessage", handleNewMessage);
-    //         }
-    //     };
-    // }, [conversationId])
 
     function onType(value: string) {
         setMessage(value)
