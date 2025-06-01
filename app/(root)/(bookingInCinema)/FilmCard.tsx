@@ -74,7 +74,7 @@ const FilmCard = ({ film, showTimes }: { film: filmInShowTimeCinemaType, showTim
                         scrollEventThrottle={16}
                     >
                         {showTimes.map((item, idx) => (
-                            <TimeCard isLogged={isLogged} seats={item.seats} hour={item.hour} minute={item.minute} id={item.id} />
+                            <TimeCard key={item.id} isLogged={isLogged} seats={item.seats} hour={item.hour} minute={item.minute} id={item.id} />
 
                         ))}
 

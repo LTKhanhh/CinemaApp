@@ -3,10 +3,6 @@ import "./global.css"
 import { useFonts } from "expo-font"
 import { useEffect } from "react";
 import { SplashScreen } from "expo-router";
-import GlobalProvider from "@/lib/global-provider";
-import { Provider } from "react-redux";
-import store from "@/redux/store";
-import { useDispatch } from "react-redux";
 import AuthProvider from "@/lib/auth-provider";
 
 export default function RootLayout() {

@@ -4,8 +4,11 @@ import images from '@/constants/images'
 import { useRouter } from 'expo-router'
 const CinemaCard = ({ name, distance, id }: { name: string, distance: string, id: string }) => {
     const router = useRouter()
+    console.log(id)
     return (
         <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(bookingInCinema)/[cinemaId]", params: { cinemaId: id } })} className='w-[49%] bg-white rounded-lg overflow-hidden'>
+            {/* <TouchableOpacity onPress={() => router.push(`/bookingByCinema/${id}`)} className='w-[49%] bg-white rounded-lg overflow-hidden'> */}
+
             <Image source={images.japan} className='w-full h-[130px] ' />
 
             <View className=' justify-center items-center py-3'>

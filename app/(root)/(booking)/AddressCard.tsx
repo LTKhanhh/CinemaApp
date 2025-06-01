@@ -28,7 +28,7 @@ const AddressCard = ({ name, list, film }: { name: string, list: showTimeType[],
 
                         {list.map((item, idx) => (
                             <View key={idx} className='items-center mr-4'>
-                                <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: item.id, movie: JSON.stringify(film) } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
+                                <TouchableOpacity onPress={isLogged ? () => router.push({ pathname: "/(root)/(booking2)/[id]", params: { id: item.id, time: JSON.stringify(item.time), movie: JSON.stringify(film) } }) : () => router.navigate("/login")} className='p-2 items-center justify-center px-4 bg-[#ccc] rounded-full'>
                                     <Text className='font-bold'>{item.hour}:{item.minute == 0 ? "00" : item.minute}</Text>
                                 </TouchableOpacity>
                                 <Text className='text-[#444] text-[13px] mt-1'>{item.seats} trống</Text>

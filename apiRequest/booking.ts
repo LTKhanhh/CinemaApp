@@ -1,4 +1,5 @@
 import http from "@/lib/http1";
+import { BookingResSchemaType } from "@/schemaValidations/booking.schema";
 import { seatType } from "@/schemaValidations/seat.schema";
 
 interface bookingBody {
@@ -9,7 +10,7 @@ interface bookingBody {
 }
 
 const bookingApiRequest = {
-    post: (body: bookingBody) => http.post<any>(`/booking/user`, body),
+    post: (body: bookingBody) => http.post<BookingResSchemaType>(`/booking/user`, body),
 }
 
 export default bookingApiRequest

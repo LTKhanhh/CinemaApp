@@ -5,46 +5,18 @@ import images from '@/constants/images'
 
 import { data } from '../(tabs)/datatest'
 
-interface Film {
-    _id: {
-        $oid: string;
-    };
-    title: string;
-    description: string;
-    releaseDate: string;
-    language: string;
-    director: string;
-    actors: string[];
-    duration: number;
-    genres: string[];
-    ageRating: string;
-    posterUrl: string;
-    bannerUrl: string;
-    trailerUrl: string;
-    status: string;
-}
-const InfoFilm = ({ id, step }: { id: string | string[], step?: number }) => {
 
-    const [film, setFilm] = useState<Film>()
+const InfoFilm = ({ name, duration, poster, step, genres, time }: { time?: string, genres?: string[], name: string, duration: string, poster: string, step?: number }) => {
 
-    useEffect(() => {
-        setFilm(data.find(item => item._id.$oid == id))
-    }, [id])
+
     return (
         <View>
             <View className='relative'>
 
-                <Image className={`w-full resize ${step == 2 ? 'h-[260px]' : "h-[160px]"} `} source={{ "uri": film?.bannerUrl }} />
-                <View className='absolute w-full top-[50px] ' style={{
-                    // Shadow không được hỗ trợ trực tiếp bằng class tailwind trong nativewind
-                    // shadowColor: '#000',
-                    // shadowOffset: { width: 0, height: 2 },
-                    // shadowOpacity: 0.25,
-                    // shadowRadius: 3.84,
-                    // elevation: 5,
-                }}>
-                    <Text className='text-2xl font-rubik-semibold text-white capitalize text-center '>{film?.title}</Text>
-                    <Text className='text-sm font-rubik-semibold text-white capitalize text-center '>{film?.genres.join(", ")} | {film?.duration} phút</Text>
+                <Image className={`w-full resize ${step == 2 ? 'h-[180px]' : "h-[140px]"} `} source={{ "uri": poster }} />
+                <View className='absolute w-full top-[80px] ' >
+                    <Text className='text-2xl font-rubik-semibold text-white capitalize text-center '>{name}</Text>
+                    <Text className='text-sm font-rubik-medium text-white capitalize text-center '>{"2D"} | {step == 2 && genres?.join(", ")}{step != 2 && formatDateTime(time)} | {duration} phút</Text>
                 </View>
 
 
@@ -56,6 +28,19 @@ const InfoFilm = ({ id, step }: { id: string | string[], step?: number }) => {
             </View>
         </View>
     )
+}
+
+function formatDateTime(isoString?: string): string {
+    if (!isoString) {
+        return ""
+    }
+    const cleanInput = isoString.replace(/^"|"$/g, '');
+
+    const [datePart, timePart] = cleanInput.split('T');
+    const [year, month, day] = datePart.split('-');
+    const [hour, minute] = timePart.split(':');
+
+    return `${hour}:${minute} ${day}/${month}/${year}`;
 }
 
 export default InfoFilm

@@ -33,7 +33,7 @@ export type BookingParams = {
 
 const SecondBookingPage = () => {
     const { isLogged } = useAuthContext();
-    const { id, movie } = useBookingParams();
+    const { id, movie, time } = useBookingParams();
     const navigation = useNavigation<any>();
     const [timeRemaining, setTimeRemaining] = useState<number>(600); // 10 phút tính bằng giây
     const [selectedChairs, setSelectedChairs] = useState<seatType[]>([]); // Mảng lưu ghế đã chọn
@@ -217,7 +217,7 @@ const SecondBookingPage = () => {
         <View className='flex-1'>
             {step == 1 && (
                 <>
-                    <View className='h-[100px]'>
+                    <View className='h-[70px]'>
                         <LinearGradient
                             colors={['#3674B5', '#A1E3F9']}
                             start={{ x: 0, y: 0 }}
@@ -239,46 +239,52 @@ const SecondBookingPage = () => {
                     </View>
 
                     <ScrollView className='flex-1 mb-24'>
-                        <InfoFilm id={id} />
+                        <InfoFilm time={time} name={movie?.title || ""} duration={movie?.duration.toString() || ""} poster={movie?.posterUrl || ""} />
 
                         <View className='px-3 py-4 border-b flex-row justify-between pr-5'>
                             <View>
                                 <View className='flex-row mb-4 items-center'>
                                     <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
-                                    <Text className='ml-2'>Ghế trống</Text>
+                                    <Text className='ml-4'>Ghế trống</Text>
                                 </View>
                                 <View className='flex-row mb-4 items-center'>
                                     <Image className='size-8' tintColor={"#3D90D7"} source={icons.chair} />
-                                    <Text className='ml-2'>Ghế đang <Text>được giữ</Text></Text>
+                                    <Text className='ml-4'>Ghế đang <Text>được giữ</Text></Text>
                                 </View>
                                 <View className='flex-row mb-4 items-center'>
                                     <Image className='size-8' tintColor={"#205781"} source={icons.chair} />
-                                    <Text className='ml-2'>Ghế đang chọn</Text>
+                                    <Text className='ml-4'>Ghế đang chọn</Text>
                                 </View>
                                 <View className='flex-row mb-4 items-center'>
                                     <Image className='size-8' tintColor={"red"} source={icons.chair} />
-                                    <Text className='ml-2'>Ghế đã bán</Text>
+                                    <Text className='ml-4'>Ghế đã bán</Text>
                                 </View>
                             </View>
 
-                            <View className='justify-between items-end pr-8'>
+                            <View className='justify-between items-start pr-8'>
                                 <View className='flex-row mb-4 items-center'>
-                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair3} />
-                                    <View className='ml-2'>
+                                    <View className='w-16 items-center'>
+                                        <Image className='size-8' tintColor={"#ccc"} source={icons.chair3} />
+
+                                    </View>
+                                    <View className='ml-4'>
                                         <Text className=' font-semibold'>Ghế thường</Text>
                                         <Text className='font-bold text-[13px]'>85.000đ</Text>
                                     </View>
                                 </View>
                                 <View className='flex-row mb-4 items-center'>
-                                    <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
-                                    <View className='ml-2'>
+                                    <View className='w-16 items-center'>
+                                        <Image className='size-8' tintColor={"#ccc"} source={icons.chair} />
+
+                                    </View>
+                                    <View className='ml-4'>
                                         <Text className=' font-semibold'>Ghế Vip</Text>
                                         <Text className='font-bold text-[13px]'>85.000đ</Text>
                                     </View>
                                 </View>
                                 <View className='flex-row mb-4 items-center'>
                                     <Image resizeMode='cover' className='h-8 w-16' tintColor={"#ccc"} source={icons.chair2} />
-                                    <View className='ml-2'>
+                                    <View className='ml-4'>
                                         <Text className=' font-semibold'>Ghế đôi</Text>
                                         <Text className='font-bold text-[13px]'>85.000đ</Text>
                                     </View>
@@ -309,7 +315,7 @@ const SecondBookingPage = () => {
             )}
 
             {step == 2 && (
-                <NextStep id={id} seats={selectedChairs} price={totalPrice} setStep={setStep} timeRemaining={timeRemaining} />
+                <NextStep time={time} movie={movie} id={id} seats={selectedChairs} price={totalPrice} setStep={setStep} timeRemaining={timeRemaining} />
             )}
 
 

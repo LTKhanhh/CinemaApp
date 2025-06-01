@@ -19,7 +19,7 @@ const Promotion = () => {
         <SafeAreaView className='h-full  bg-blue-400'>
             <View className="px-4 pt-4 pb-4 flex w-full border-b bg-blue-400 border-[#eeeeee] flex-row items-center justify-between">
                 <View>
-                    <Text className='text-xl font-rubik-bold text-white'>Tin mới và Ưu đãi</Text>
+                    <Text className='text-xl font-rubik-bold text-white'>Thông báo</Text>
                 </View>
 
             </View>
@@ -49,12 +49,7 @@ const Promotion = () => {
             </View>
 
             <ScrollView className='flex-1 bg-[#f7f7f7] pt-6'>
-                <SaleCard />
-                <SaleCard />
-                <SaleCard />
-                <SaleCard />
-                <SaleCard />
-                <SaleCard />
+
             </ScrollView>
 
             <View className='mb-12'></View>

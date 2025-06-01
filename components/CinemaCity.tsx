@@ -28,7 +28,7 @@ const CinemaCity = ({ city, cinemas }: { city: string, cinemas: CinemaSchemaType
                 <FlatList
                     data={cinemas}
                     renderItem={({ item }) => (
-                        <CinemaCard id={item.id} name={item.name} distance={"100"}
+                        <CinemaCard id={item._id} name={item.name} distance={"100"}
                         />
                     )}
                     // keyExtractor={(item) => item.toString()}

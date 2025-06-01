@@ -109,7 +109,7 @@ apiClient.interceptors.response.use(
                     throw new Error("No refresh token available");
                 }
 
-                const refreshResponse = await http.put<refreshTokenResType>('/auth/refresh', null, {
+                const refreshResponse = await http.put<refreshTokenResType>('/auth/refresh', {}, {
                     headers: {
                         'x-refresh-token': `Bearer ${refreshToken}`,
                     }

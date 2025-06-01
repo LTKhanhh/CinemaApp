@@ -8,11 +8,16 @@ import InfoStep2 from './InfoStep2'
 import PayCard from './PayCard'
 import { seatType } from '@/schemaValidations/seat.schema'
 import bookingApiRequest from '@/apiRequest/booking'
+import { filmInListType } from '@/schemaValidations/film.schema'
+import paymentApiRequest from '@/apiRequest/payment'
+import { ActivityIndicator } from 'react-native';
 
-const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, seats: seatType[], price: number, timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
+const NextStep = ({ time, movie, seats, price, timeRemaining, id, setStep }: { time: string, movie: filmInListType | null, id: string, seats: seatType[], price: number, timeRemaining: number, setStep: React.Dispatch<React.SetStateAction<number>> }) => {
     const navigate = useNavigation()
     const router = useRouter()
     const [curType, setCurType] = useState("noidia")
+    const [bookingId, setBookingId] = useState("")
+    const [loading, setLoading] = useState(false);
 
     const handleBooking = async () => {
         const body = {
@@ -21,16 +26,48 @@ const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, se
             totalPay: price.toString(),
         }
         try {
-            await bookingApiRequest.post(body)
+            const res = await bookingApiRequest.post(body)
 
+            setBookingId(res.payload.id)
+
+            Alert.alert(
+                "Xác nhận thanh toán",
+                "Bạn có chắc chắn muốn thanh toán đơn hàng này không?",
+                [
+                    { text: "Huỷ", style: "cancel" },
+                    {
+                        text: "Đồng ý",
+                        onPress: async () => {
+                            setLoading(true);
+                            await payment();
+                            setLoading(false);
+                        },
+                    },
+                ],
+                { cancelable: false }
+            );
+        } catch (error) {
+            Alert.alert("Lỗi booking", "Có lỗi xảy ra, xin thử lại.");
+        }
+    }
+
+    const payment = async () => {
+        const body = {
+            bookingId: bookingId,
+            status: "confirmed"
+        }
+        try {
+            await paymentApiRequest.demo(body)
+            Alert.alert("Thanh toán thành công");
+            router.push("/(root)/(tabs)")
 
         } catch (error) {
-            Alert.alert("Lỗi", "Có lỗi xảy ra, xin thử lại.");
+            Alert.alert("Lỗi payment", "Có lỗi xảy ra, xin thử lại.");
         }
     }
     return (
         <View className='flex-1'>
-            <View className='h-[100px]'>
+            <View className='h-[70px]'>
                 <LinearGradient
                     colors={['#3674B5', '#A1E3F9']}
                     start={{ x: 0, y: 0 }}
@@ -51,7 +88,7 @@ const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, se
             </View>
 
             <ScrollView className='flex-1 p-3 '>
-                <InfoStep2 seats={seats} price={price}></InfoStep2>
+                <InfoStep2 time={time} movie={movie} seats={seats} price={price}></InfoStep2>
 
                 <View className='mt-4'>
                     <Text className='font-rubik text-[26px]'>Phương thức giảm giá</Text>
@@ -111,7 +148,7 @@ const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, se
                         start={{ x: 0, y: 0 }}
                         end={{ x: 1, y: 0 }}
                     >
-                        <TouchableOpacity className='w-full h-full justify-center items-center '>
+                        <TouchableOpacity onPress={handleBooking} className='w-full h-full justify-center items-center '>
                             <View className='flex-row items-center justify-between '>
                                 <Text className='text-2xl font-rubik text-white'>Thanh toán</Text>
                             </View>
@@ -119,7 +156,12 @@ const NextStep = ({ seats, price, timeRemaining, id, setStep }: { id: string, se
                     </LinearGradient>
                 </View>
 
-
+                {loading && (
+                    <View className="absolute top-0 left-0 right-0 bottom-0 bg-black/40 justify-center items-center z-50">
+                        <ActivityIndicator size="large" color="#ffffff" />
+                        <Text className="mt-2 text-white font-rubik">Đang xử lý thanh toán...</Text>
+                    </View>
+                )}
                 <View className='mb-10'></View>
             </ScrollView>
         </View>

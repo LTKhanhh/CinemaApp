@@ -26,7 +26,7 @@ const Other = () => {
                     <Link href={isLogged ? '/(root)/(profile)/ProfilePage' : '/login'} className='mr-8'>
                         <OtherCard name='Thành viên Beta' icon={icons.person} iconColor='#87c041' color='#f1f8eb' />
                     </Link>
-                    <Link href={'/(root)/(notifications)/Notification'}>
+                    <Link href={'/(root)/(tabs)/Promotion'}>
                         <OtherCard name='Thông báo' iconColor='#e57b2a' icon={icons.bell} color='#fdf2ea' />
                     </Link >
                 </View>

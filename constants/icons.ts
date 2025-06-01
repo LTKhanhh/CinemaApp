@@ -48,8 +48,9 @@ import document from "@/assets/icons/document.png"
 import chair from "@/assets/icons/chair.png";
 import chair2 from "@/assets/icons/chair2.png";
 import chair3 from "@/assets/icons/chair3.png";
-
+import noti from "@/assets/icons/noti.png";
 export default {
+  noti,
   chair,
   chair2,
   chair3,

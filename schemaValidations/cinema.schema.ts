@@ -25,7 +25,7 @@ const CinemaSchema = z.object({
     location: LocationSchema,
     name: z.string(),
     phone: z.string(),
-    id: z.string(),
+    _id: z.string(),
 })
 
 export type CinemaSchemaType = z.TypeOf<typeof CinemaSchema>

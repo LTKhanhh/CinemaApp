@@ -21,6 +21,7 @@ const Conversation = () => {
             try {
                 const res = await chatApiRequest.get("0")
                 const data = res.payload
+                console.log(data)
                 setConversationId(data.conversationId);
 
                 // Lọc ra các tin nhắn (bỏ qua key 'conversationId')

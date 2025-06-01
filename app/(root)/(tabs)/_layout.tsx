@@ -18,7 +18,7 @@ const TabIcon = ({
             <Text className={`${focused
                 ? "text-primary-300 font-rubik-medium"
                 : "text-black-200 font-rubik"
-                } text-xs w-full text-center mt-1`}>{title}</Text>
+                } text-xs w-full text-center mt-1 `}>{title}</Text>
         </View>
     )
 }
@@ -39,38 +39,38 @@ const TabsLayout = () => {
             }
         >
             <Tabs.Screen name='index' options={{
-                title: 'Home',
+                title: 'Lịch chiếu theo phim',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.home} title='home' />
+                    <TabIcon focused={focused.focused} icon={icons.home} title='Trang chủ' />
                 ),
             }} />
             <Tabs.Screen name='Address' options={{
-                title: 'Address',
+                title: 'Lịch chiếu theo rạp',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.location} title='Address' />
+                    <TabIcon focused={focused.focused} icon={icons.location} title='Lịch chiếu theo rạp' />
                 ),
             }} />
             <Tabs.Screen name='Conversation' options={{
-                title: 'Conversation',
+                title: 'Tin nhắn',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.email} title='Conversation' />
+                    <TabIcon focused={focused.focused} icon={icons.email} title='Tin nhắn' />
                 ),
             }} />
             <Tabs.Screen name='Promotion' options={{
-                title: 'Promotion',
+                title: 'Thông báo',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.gift} title='Promotion' />
+                    <TabIcon focused={focused.focused} icon={icons.noti} title='Thông báo' />
                 ),
             }} />
             <Tabs.Screen name='Other' options={{
-                title: 'Other',
+                title: 'Khác',
                 headerShown: false,
                 tabBarIcon: (focused) => (
-                    <TabIcon focused={focused.focused} icon={icons.other} title='Other' />
+                    <TabIcon focused={focused.focused} icon={icons.other} title='Khác' />
                 ),
             }} />
 

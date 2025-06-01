@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, ScrollView } from 'react-native'
+import { View, Text, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation, Redirect } from 'expo-router';
 import { useLocalSearchParams } from "expo-router";
@@ -40,22 +40,10 @@ const Page = () => {
     };
     useEffect(() => {
         const controller = new AbortController();
-
-        // const fetch = async () => {
-        //     try {
-        //         const res = await showtimeApiRequest.getByFilm(id, page, controller)
-
-        //         console.log(res)
-        //     } catch (error) {
-        //         console.log("lỗi booking")
-        //         console.log(error)
-        //     }
-        // }
-        // fetch()
         fetchData(controller)
 
         return () => controller.abort();
-    }, []);
+    }, [page]);
     return (
         <View className='flex-1'>
             <View className='h-[100px]'>
@@ -94,7 +82,7 @@ const Page = () => {
                             if (!film) return null; // tránh lỗi nếu filmId không có trong films
 
                             return (
-                                <View className='px-3'>
+                                <View key={filmId} className='px-3'>
 
                                     <FilmCard
                                         key={idx}
@@ -106,6 +94,12 @@ const Page = () => {
                             );
                         })}
             </ScrollView>
+
+            {isLoading && (
+                <View className="absolute inset-0 bg-gray-500/50 justify-center items-center z-50">
+                    <ActivityIndicator size="large" color="#fff" />
+                </View>
+            )}
         </View>
     )
 }
