@@ -10,6 +10,9 @@ const LinkItem = ({ title, link }: { title: string, link?: string }) => {
         if (link == "password") {
             router.push("/(root)/(profile)/changePassword")
         }
+        if (link == "booking") {
+            router.push("/(root)/(bookingList)")
+        }
     }
     return (
         <TouchableOpacity onPress={handleNavigate} className='py-3 mt-4  px-2 flex-row bg-white mx-2 justify-between items-center'>

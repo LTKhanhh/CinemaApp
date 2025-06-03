@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, ScrollView } from 'react-native'
+import { View, Text, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CinemaCity from '@/components/CinemaCity'
 import { LinearGradient } from 'expo-linear-gradient'
@@ -65,17 +65,20 @@ const datas = [
 const Address = () => {
     const [cinemas, setCinemas] = useState<CinemaListSchemaType>({})
     const navigation = useNavigation()
-
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         const controller = new AbortController()
 
         const getData = async () => {
+            setLoading(true);
             try {
                 const res = await cinemaApiRequest.getAll(controller)
                 console.log(res)
                 setCinemas(res.payload)
             } catch (error) {
 
+            } finally {
+                setLoading(false);
             }
         }
         getData()
@@ -89,7 +92,7 @@ const Address = () => {
                 end={{ x: 1, y: 0 }}
 
             >
-                <View className="px-4 pt-14 pb-4 flex w-full border-b bg-[#ffffff] border-[#eeeeee] flex-row items-center justify-between">
+                <View className="px-4 pt-4 pb-4 flex w-full border-b bg-[#ffffff] border-[#eeeeee] flex-row items-center justify-between">
                     <Text className='text-xl font-rubik-bold '>Rạp phim NEMUI</Text>
                 </View>
             </LinearGradient>
@@ -107,6 +110,12 @@ const Address = () => {
                 ))}
                 <View className='mb-32'></View>
             </ScrollView>
+
+            {loading && (
+                <View className="absolute inset-0 bg-gray-500/50 justify-center items-center z-50">
+                    <ActivityIndicator size="large" color="#fff" />
+                </View>
+            )}
         </View>
     )
 }

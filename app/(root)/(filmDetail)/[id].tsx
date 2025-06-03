@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, ScrollView } from 'react-native'
+import { View, Text, Pressable, Image, ScrollView, ActivityIndicator } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from 'expo-router';
 import icons from '@/constants/icons';
@@ -33,7 +33,7 @@ const DetailPage = () => {
     const { id } = useLocalSearchParams<{ id: string }>();
 
     const [film, setFilm] = useState<Film>()
-
+    const [loading, setLoading] = useState(false)
     useEffect(() => {
         setFilm(data.find(item => item._id.$oid == id))
     }, [id])
@@ -44,12 +44,15 @@ const DetailPage = () => {
         const controller = new AbortController()
 
         const getData = async () => {
+            setLoading(true)
             try {
                 const res = await filmApiRequest.getOne(id, controller)
                 console.log(res)
                 setFilmInfo(res.payload)
             } catch (error) {
 
+            } finally {
+                setLoading(false)
             }
         }
         getData()
@@ -94,6 +97,12 @@ const DetailPage = () => {
                 />
 
             </ScrollView>
+
+            {loading && (
+                <View className="absolute inset-0 bg-gray-500/50 justify-center items-center z-50">
+                    <ActivityIndicator size="large" color="#fff" />
+                </View>
+            )}
         </View>
     )
 }

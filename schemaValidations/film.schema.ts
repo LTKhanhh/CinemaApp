@@ -29,6 +29,8 @@ const filmInList = z.object({
     releaseDate: z.string(),
     genres: z.array(z.string()).default([]),
     duration: z.number(),
+    description: z.string(),
+    status: z.string()
 })
 
 export type filmInListType = z.TypeOf<typeof filmInList>

@@ -26,7 +26,7 @@ export const Card = ({ onPress, film }: Props) => {
                 <Text className="font-rubik-bold text-lg capitalize text-primary-300 text-center">{film.title}</Text>
             </View>
             <View>
-                <Text className="font-rubik-medium text-md capitalize text-[#ccc] text-center">{120} phút</Text>
+                <Text className="font-rubik-medium text-md capitalize text-[#ccc] text-center">{film.duration} phút</Text>
             </View>
         </TouchableOpacity>
     );

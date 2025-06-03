@@ -1,4 +1,4 @@
-import { Animated, FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, Animated, FlatList, Image, Pressable, ScrollView, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Card } from "@/components/Card";
 
@@ -17,7 +17,7 @@ import { useAuthContext } from "@/lib/auth-provider";
 export default function Index() {
   const [films, setFilms] = useState<getAllFilmResType>([])
   const { loading, isLogged, user } = useAuthContext();
-
+  const [isLoading, setIsLoading] = useState(false)
   const [activeIndex, setActiveIndex] = useState(0)
   const { width } = useWindowDimensions()
   const scrollX = useRef(new Animated.Value(0)).current
@@ -45,20 +45,37 @@ export default function Index() {
   const viewabilityConfig = useRef({
     itemVisiblePercentThreshold: 50,
   }).current
+  const [allFilm, setAllFilm] = useState<getAllFilmResType>([])
+  const [curVal, setCurVal] = useState("1")
 
   useEffect(() => {
     const controller = new AbortController()
     const getFilms = async () => {
+      setIsLoading(true)
       try {
+
         const res = await filmApiRequest.getAll(controller)
         // console.log(res)
-        setFilms(res.payload)
+        setAllFilm(res.payload)
+        setFilms(res.payload.filter(item => item.status == "now_showing"))
+
       } catch (error) {
         console.log(error)
+      } finally {
+        setIsLoading(false)
       }
     }
     getFilms()
   }, [])
+
+  useEffect(() => {
+    if (curVal == "1") {
+      setFilms(allFilm.filter(item => item.status == "now_showing"))
+    }
+    if (curVal == "2") {
+      setFilms(allFilm.filter(item => item.status == "coming_soon"))
+    }
+  }, [curVal])
 
   return (
     < SafeAreaView className="h-full px-1 bg-[#ffffff]" >
@@ -95,7 +112,7 @@ export default function Index() {
 
           <Image source={icons.people} className="size-6" />
         </View>
-        <Filter />
+        <Filter curVal={curVal} setCurVal={setCurVal} />
       </View>
 
       <ScrollView className="bg-[#f7f7f7]">
@@ -128,7 +145,7 @@ export default function Index() {
             // paddingLeft: 5,
             marginBottom: 10,
           }}
-          className="mt-2 pb-32 px-[5px]"
+          className="mt-2 pb-12 px-[5px]"
           scrollEnabled={false}
           renderItem={({ item }) => (
             <Card film={item} />
@@ -137,6 +154,11 @@ export default function Index() {
 
         />
       </ScrollView>
+      {isLoading || loading && (
+        <View className="absolute inset-0 bg-gray-500/50 justify-center items-center z-50">
+          <ActivityIndicator size="large" color="#fff" />
+        </View>
+      )}
     </ SafeAreaView>
   );
 }

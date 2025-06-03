@@ -14,8 +14,8 @@ const Other = () => {
 
             <View className='items-center '>
                 <View className='flex-row space-x-4 mb-8'>
-                    <Link className='mr-8' href={'/(root)/(tabs)/Voucher'}>
-                        <OtherCard name='Voucher miễn phí' icon={icons.voucher} iconColor='#2187eb' color='#e2f3fc' />
+                    <Link className='mr-8' href={'/(root)/(bookingList)'}>
+                        <OtherCard name='Lịch sử giao dịch' icon={icons.voucher} iconColor='#2187eb' color='#e2f3fc' />
                     </Link>
                     <Link href={'/(root)/(tabs)/Address'}>
                         <OtherCard name='Rạp phim beta' icon={icons.film} color='#e7f9fc' iconColor='#40bec6' />

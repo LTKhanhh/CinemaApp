@@ -51,7 +51,7 @@ const ProfilePage = () => {
                 <ProfileCard />
 
                 <LinkItem title='Điểm beta' />
-                <LinkItem title='Lịch sử giao dịch' />
+                <LinkItem title='Lịch sử giao dịch' link='booking' />
                 <LinkItem title='Thông tin tài khoản' />
                 <LinkItem title='Thay đổi mật khẩu' link='password' />
                 <LinkItem title='Xóa tài khoản' />
