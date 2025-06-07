@@ -16,7 +16,7 @@ const NextStep = ({ time, movie, seats, price, timeRemaining, id, setStep }: { t
     const navigate = useNavigation()
     const router = useRouter()
     const [curType, setCurType] = useState("noidia")
-    const [bookingId, setBookingId] = useState("")
+    // const [bookingId, setBookingId] = useState("")
     const [loading, setLoading] = useState(false);
 
     const handleBooking = async () => {
@@ -28,43 +28,31 @@ const NextStep = ({ time, movie, seats, price, timeRemaining, id, setStep }: { t
         try {
             const res = await bookingApiRequest.post(body)
 
-            setBookingId(res.payload.id)
+            // setBookingId(res.payload.id)
 
-            Alert.alert(
-                "Xác nhận thanh toán",
-                "Bạn có chắc chắn muốn thanh toán đơn hàng này không?",
-                [
-                    { text: "Huỷ", style: "cancel" },
-                    {
-                        text: "Đồng ý",
-                        onPress: async () => {
-                            setLoading(true);
-                            await payment();
-                            setLoading(false);
-                        },
-                    },
-                ],
-                { cancelable: false }
-            );
+            router.push({ pathname: "/(root)/(payment)", params: { bookingId: res.payload.id, totalPay: price.toString() } })
+            // Alert.alert(
+            //     "Xác nhận thanh toán",
+            //     "Bạn có chắc chắn muốn thanh toán đơn hàng này không?",
+            //     [
+            //         { text: "Huỷ", style: "cancel" },
+            //         {
+            //             text: "Đồng ý",
+            //             onPress: async () => {
+            //                 setLoading(true);
+            //                 // await payment();
+            //                 setLoading(false);
+            //             },
+            //         },
+            //     ],
+            //     { cancelable: false }
+            // );
         } catch (error) {
             Alert.alert("Lỗi booking", "Có lỗi xảy ra, xin thử lại.");
         }
     }
 
-    const payment = async () => {
-        const body = {
-            bookingId: bookingId,
-            status: "confirmed"
-        }
-        try {
-            await paymentApiRequest.demo(body)
-            Alert.alert("Thanh toán thành công");
-            router.push("/(root)/(tabs)")
 
-        } catch (error) {
-            Alert.alert("Lỗi payment", "Có lỗi xảy ra, xin thử lại.");
-        }
-    }
     return (
         <View className='flex-1'>
             <View className='h-[70px]'>

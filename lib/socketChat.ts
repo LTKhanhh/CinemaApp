@@ -16,8 +16,6 @@ export const connectSocketChat = (conversationId: string, text: string): Socket 
         transports: ['websocket'], // tối ưu cho mobile
     });
 
-
-
     socket.on("connect_error", (err) => {
         console.error("❌ Socket connect error:", err.message);
     });

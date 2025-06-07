@@ -17,7 +17,7 @@ const index = () => {
             setLoading(true)
             try {
                 const res = await bookingApiRequest.getAll()
-                setBookingList(res.payload)
+                setBookingList(res.payload.reverse())
             } catch (error) {
 
             } finally {

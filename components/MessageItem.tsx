@@ -8,6 +8,8 @@ const MessageItem = ({ isChat }: { isChat: boolean }) => {
     const handleNavigate = () => {
         if (isChat) {
             router.push("/(root)/(chat)")
+        } else {
+            router.push("/(root)/(chatbot)")
         }
     }
     return (

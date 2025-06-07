@@ -9,7 +9,7 @@ const CinemaCard = ({ name, distance, id }: { name: string, distance: string, id
         <TouchableOpacity onPress={() => router.push({ pathname: "/(root)/(bookingInCinema)/[cinemaId]", params: { cinemaId: id } })} className='w-[49%] bg-white rounded-lg overflow-hidden'>
             {/* <TouchableOpacity onPress={() => router.push(`/bookingByCinema/${id}`)} className='w-[49%] bg-white rounded-lg overflow-hidden'> */}
 
-            <Image source={images.japan} className='w-full h-[130px] ' />
+            <Image source={{ uri: "https://static.vinwonders.com/production/rap-phim-ha-noi-2.jpg" }} className='w-full h-[130px] ' />
 
             <View className=' justify-center items-center py-3'>
                 <Text className='text-md font-rubik-bold'>{name}</Text>

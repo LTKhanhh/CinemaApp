@@ -13,198 +13,126 @@ export class HttpError extends Error {
     }
 }
 
-// Base URL configuration
-const BASE_URL = process.env.EXPO_PUBLIC_API_ENDPOINT || "http://10.0.2.2";
-
-// Create main Axios instance
+// Create Axios instance with default configuration
 const apiClient: AxiosInstance = axios.create({
-    baseURL: BASE_URL,
-    headers: {
-        'Content-Type': 'application/json',
-    },
-});
-
-// Create separate Axios instance for refresh token requests to avoid circular dependency
-const refreshClient: AxiosInstance = axios.create({
-    baseURL: BASE_URL,
+    baseURL: "http://10.0.2.2:8000/",
     headers: {
         'Content-Type': 'application/json',
     },
 });
 
 // Helper to manage auth tokens with AsyncStorage
-export const TokenManager = {
-    async getToken(): Promise<string | null> {
-        try {
-            return await AsyncStorage.getItem('accessToken');
-        } catch (error) {
-            console.error('Error getting access token:', error);
-            return null;
-        }
-    },
+// export const TokenManager = {
+//     async getToken(): Promise<string | null> {
+//         try {
+//             return await AsyncStorage.getItem('accessToken');
+//         } catch (error) {
+//             console.error('Error getting token:', error);
+//             return null;
+//         }
+//     },
 
-    async setToken(token: string): Promise<void> {
-        try {
-            await AsyncStorage.setItem('accessToken', token);
-        } catch (error) {
-            console.error('Error setting access token:', error);
-        }
-    },
+//     async setToken(token: string): Promise<void> {
+//         try {
+//             await AsyncStorage.setItem('accessToken', token);
+//         } catch (error) {
+//             console.error('Error setting token:', error);
+//         }
+//     },
 
-    async getRefreshToken(): Promise<string | null> {
-        try {
-            return await AsyncStorage.getItem('refreshToken');
-        } catch (error) {
-            console.error('Error getting refresh token:', error);
-            return null;
-        }
-    },
+//     async getRefreshToken(): Promise<string | null> {
+//         try {
+//             return await AsyncStorage.getItem('refreshToken');
+//         } catch (error) {
+//             console.error('Error getting token:', error);
+//             return null;
+//         }
+//     },
 
-    async setRefreshToken(token: string): Promise<void> {
-        try {
-            await AsyncStorage.setItem('refreshToken', token);
-        } catch (error) {
-            console.error('Error setting refresh token:', error);
-        }
-    },
+//     async setRefreshToken(token: string): Promise<void> {
+//         try {
+//             await AsyncStorage.setItem('refreshToken', token);
+//         } catch (error) {
+//             console.error('Error setting token:', error);
+//         }
+//     },
 
-    async removeTokens(): Promise<boolean> {
-        try {
-            await AsyncStorage.multiRemove(['accessToken', 'refreshToken']);
-            return true;
-        } catch (error) {
-            console.error('Error removing tokens:', error);
-            return false;
-        }
-    },
+//     async removeToken(): Promise<boolean> {
+//         try {
+//             await AsyncStorage.removeItem('accessToken');
+//             await AsyncStorage.removeItem('refreshToken');
 
-    async setTokens(accessToken: string, refreshToken: string): Promise<void> {
-        try {
-            await AsyncStorage.multiSet([
-                ['accessToken', accessToken],
-                ['refreshToken', refreshToken]
-            ]);
-        } catch (error) {
-            console.error('Error setting tokens:', error);
-        }
-    }
-};
+//             return true
+//         } catch (error) {
+//             console.error('Error removing token:', error);
+//             return false
+//         }
+//     },
 
-// Flag to prevent multiple simultaneous refresh attempts
-let isRefreshing = false;
-let failedQueue: Array<{
-    resolve: (value?: any) => void;
-    reject: (error?: any) => void;
-}> = [];
 
-// Process queued requests after token refresh
-const processQueue = (error: any, token: string | null = null) => {
-    failedQueue.forEach(({ resolve, reject }) => {
-        if (error) {
-            reject(error);
-        } else {
-            resolve(token);
-        }
-    });
+// };
 
-    failedQueue = [];
-};
+// // Request interceptor to add auth token to each request
+// apiClient.interceptors.request.use(
+//     async (config) => {
+//         const token = await TokenManager.getToken();
+//         if (token) {
+//             config.headers.Authorization = `Bearer ${token}`;
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
 
-// Request interceptor to add auth token to each request
-apiClient.interceptors.request.use(
-    async (config) => {
-        const token = await TokenManager.getToken();
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => Promise.reject(error)
-);
+// // Response interceptor for handling auth errors
+// apiClient.interceptors.response.use(
+//     response => response,
+//     async (error) => {
+//         const originalRequest = error.config;
 
-// Response interceptor for handling auth errors
-apiClient.interceptors.response.use(
-    response => response,
-    async (error) => {
-        const originalRequest = error.config;
+//         // Tránh lặp vô hạn khi refreshToken cũng bị lỗi
+//         if (error.response?.status === 401 && !originalRequest._retry) {
+//             originalRequest._retry = true;
+//             console.log("re")
+//             try {
+//                 const refreshToken = await TokenManager.getRefreshToken();
+//                 const accessToken = await TokenManager.getToken();
+//                 console.log(refreshToken)
+//                 console.log(accessToken)
 
-        // Check if error is 401 and request hasn't been retried yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
-            if (isRefreshing) {
-                // If already refreshing, queue this request
-                return new Promise((resolve, reject) => {
-                    failedQueue.push({ resolve, reject });
-                }).then(token => {
-                    originalRequest.headers.Authorization = `Bearer ${token}`;
-                    return apiClient(originalRequest);
-                }).catch(err => {
-                    return Promise.reject(err);
-                });
-            }
+//                 if (!accessToken) {
+//                     return
+//                 }
+//                 if (!refreshToken) {
+//                     throw new Error("No refresh token available");
+//                 }
 
-            originalRequest._retry = true;
-            isRefreshing = true;
+//                 const refreshResponse = await http.put<refreshTokenResType>('/auth/refresh', {}, {
+//                     headers: {
+//                         'x-refresh-token': `Bearer ${refreshToken}`,
+//                     }
+//                 });
 
-            try {
-                const refreshToken = await TokenManager.getRefreshToken();
+//                 const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.payload.data;
 
-                if (!refreshToken) {
-                    throw new Error("No refresh token available");
-                }
+//                 await TokenManager.setToken(newAccessToken);
+//                 await TokenManager.setRefreshToken(newRefreshToken);
 
-                console.log("Attempting to refresh token...");
+//                 // Gắn token mới vào headers và gửi lại request cũ
+//                 originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+//                 return apiClient(originalRequest);
+//             } catch (refreshError) {
+//                 console.error('Token refresh failed:', refreshError);
+//                 await TokenManager.removeToken();
+//                 // Nếu cần chuyển hướng về login có thể gọi thêm hàm navigate ở đây
+//                 return Promise.reject(refreshError);
+//             }
+//         }
 
-                // Use separate client to avoid interceptor loop
-                const refreshResponse = await refreshClient.put<refreshTokenResType>(
-                    '/auth/refresh',
-                    null,
-                    {
-                        headers: {
-                            'x-refresh-token': `Bearer ${refreshToken}`,
-                        }
-                    }
-                );
+//         return Promise.reject(error);
+//     }
+// );
 
-                const {
-                    accessToken: newAccessToken,
-                    refreshToken: newRefreshToken
-                } = refreshResponse.data.data;
-
-                // Save new tokens
-                await TokenManager.setTokens(newAccessToken, newRefreshToken);
-
-                // Update the failed request with new token
-                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-
-                // Process queued requests
-                processQueue(null, newAccessToken);
-
-                console.log("Token refreshed successfully");
-
-                // Retry the original request
-                return apiClient(originalRequest);
-
-            } catch (refreshError) {
-                console.error('Token refresh failed:', refreshError);
-
-                // Process queued requests with error
-                processQueue(refreshError, null);
-
-                // Clear tokens
-                await TokenManager.removeTokens();
-
-                // You can add navigation to login screen here
-                // Example: NavigationService.navigate('Login');
-
-                return Promise.reject(refreshError);
-            } finally {
-                isRefreshing = false;
-            }
-        }
-
-        return Promise.reject(error);
-    }
-);
 
 // Generic request function
 const request = async <Response>(
@@ -233,8 +161,6 @@ const request = async <Response>(
             payload: response.data,
         };
     } catch (error: any) {
-        console.error(`${method} ${url} failed:`, error?.response?.data || error.message);
-
         // Throw the error data directly as in the original code
         throw error.response?.data || new HttpError({
             status: error.response?.status || 500,
